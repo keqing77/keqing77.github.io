@@ -4,7 +4,6 @@
   width: 2rem;
   height: 2rem;
   margin: 0 6px 6px 0;
-  /* background: url("../img/Vue.png") no-repeat; */
   background: url("../img/mkm.jpg") no-repeat;
   background-size: 100% 100%;
   vertical-align: middle;
@@ -21,8 +20,8 @@
 #app .footer {
   /* position: absolute;
   bottom: 0; */
-  font-size: 1rem;
   /* transform: translateX(20%); */
+  font-size: 1rem;
   margin: 0 auto;
   text-align: center;
   display: block;
@@ -36,15 +35,7 @@
     #e91e63);
   background-clip: text;
   -webkit-background-clip: text;
-  /* 这次的这句和以往不一样 */
-  /* 以往是考虑低版本浏览器 */
-  /* 这次就连最新版Chrome和Safari都需要 */
-  /* 注意是background-clip: text;需要 */
-  /* 如果是： content-box啊之类的就没这么苛刻的 */
   -webkit-text-fill-color: transparent;
-  /* 这个属性的-webkit-前缀也比较特殊 */
-  /* 寻常的-webkit-表示的是Chrome和Safari的私有属性 */
-  /* 但是它却声明了所有的（除了那位浏览器） */
   background-image:
   linear-gradient(90deg, 
     rgb(255, 167, 69),
@@ -57,7 +48,15 @@
     rgb(254, 134, 159),
     rgb(255, 167, 69));
   background-size: 200%;
-  animation: streamer 2s linear infinite;
+  /* animation: streamer 2s linear infinite; */
+  animation: streamer 2s linear infinite,typing 2s steps(22), blink .5s step-end infinite alternate;
+
+  /* 打字机效果 */
+  width: 33ch;
+  /* animation: typing 2s steps(22), blink .5s step-end infinite alternate; */
+  white-space: nowrap;
+  overflow: hidden;
+  border-right: 3px solid;
 }
 
 
@@ -76,8 +75,6 @@
   font-weight: 300;
   border-top: 2px solid #fff;
   border-bottom: 2px solid #fff;
- 
-
   -webkit-text-fill-color: transparent;
   -webkit-background-clip: text;
   -webkit-background-size: 200% 100%;
@@ -124,9 +121,9 @@
   /* 线性渐变 */
   background-image: -webkit-gradient(linear, 
   left bottom, left top,
-   color-stop(0.44, rgb(60,186,146)), 
-   color-stop(0.72, rgb(253,187,45)), 
-   color-stop(0.86, rgb(253,187,45)));
+  color-stop(0.44, rgb(60,186,146)), 
+  color-stop(0.72, rgb(253,187,45)), 
+  color-stop(0.86, rgb(253,187,45)));
   transition: 0.3s ease-in-out;
 }
 /*定义滑块悬浮样式*/
@@ -137,4 +134,20 @@
   olor-stop(0.72, rgb(253,187,45)), 
   color-stop(0.86, rgb(60,186,146)));
   transition: 0.3s ease-in-out;
+}
+
+
+
+/* 打字机效果 */
+
+@keyframes typing {
+  from {
+    width: 0
+  }
+}
+    
+@keyframes blink {
+  50% {
+    border-color: transparent
+  }
 }
