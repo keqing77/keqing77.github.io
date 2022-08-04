@@ -47,8 +47,9 @@ var config = {
     onBrokenMarkdownLinks: 'warn',
     favicon: 'img/logo.svg',
     // i18n: i18nConfig,
+    projectName: 'lalalavard.github.io',
     organizationName: 'lalalavard',
-    projectName: 'react-blog',
+    trailingSlash: false,
     presets: [
         [
             'classic',

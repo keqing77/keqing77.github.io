@@ -1,15 +1,13 @@
 # Dependencies
 /node_modules
 
-# Config
-docusaurus.config.js
-
 # Production
-#/build
+/build
 
 # Generated files
 .docusaurus
 .cache-loader
+docusaurus.config.js
 
 # Misc
 .DS_Store

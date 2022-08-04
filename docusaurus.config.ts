@@ -12,9 +12,9 @@ const config: Config = {
   onBrokenMarkdownLinks: 'warn',
   favicon: 'img/logo.svg',
   // i18n: i18nConfig,
-  organizationName: 'lalalavard', // Usually your GitHub org/user name.
-  projectName: 'react-blog', // Usually your repo name.
-
+  projectName: 'lalalavard.github.io',
+  organizationName: 'lalalavard',
+  trailingSlash: false,
   presets: [
     [
       'classic',
