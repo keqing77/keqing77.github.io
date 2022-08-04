@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunkreact_blog=self.webpackChunkreact_blog||[]).push([[3574],{9533:a=>{a.exports=JSON.parse('{"label":"Thoughworks","permalink":"/blog/tags/thoughworks","allTagsPath":"/blog/tags","count":1}')}}]);

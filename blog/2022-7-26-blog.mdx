@@ -1,0 +1,52 @@
+---
+slug: blog
+title: 迁移到docusaurus记录
+authors: lavard
+tags: [docusaurus]
+---
+
+import Tabs from '@theme/Tabs';
+
+import TabItem from '@theme/TabItem';
+
+## 为何选择 docusaurus?
+
+笔者之前的博客一开始是使用`hexo`搭建的, 后来学习了`vue`,偶然逛知乎发现尤大写了个项目,没错就是`vuepress`, 一使用便爱上了,后来随着 `Vue3`和`Vite`的诞生又迁移至`Vitepress`, 对`Vite`闪电般的构建速度十分满意, 但`Vitepress`尤大交给了 core team 的日本开发者,但这开发者实在太懒了, 存在许多`Bug` , 加上在工作中更多地的使用`React`, 最终决定迁移至`docusaurus`
+
+:::tip 各静态网站生成器对比
+
+<Tabs>
+  <TabItem value="VitePress" label="VitePress">
+    VitePress十分强大,借助于Vue3的强大表达能力和Vite的闪电般构建速度,
+    一度使我想要为其贡献代码 , 但现在的工作技术栈和Vue相关不多, 加上我太懒了😊
+  </TabItem>
+  <TabItem value="docusaurus" label="docusaurus">
+    Facebook团队倾力之作, 完成度很高 ,
+    既能开箱即用,又能很好地满足定制化需求,非常自由且强大, awesome! 👏
+  </TabItem>
+  <TabItem value="banana" label="Next.js">
+    杀鸡焉用牛刀, docusaurus已经很好地满足了我的需求,
+    除非后续要追求更好的SEO性能
+  </TabItem>
+</Tabs>
+
+:::
+
+## 迁移花费时间
+
+因为`VitePress`和`Docusaurus`都是基于`Markdown`拓展语法, 并分别支持`Vue`和`React`组件, 所以迁移的主要工作都是一些的格式的更改,以及静态资源路径的更改, 同时对样式进行了重构, 陆续还是花了一周多的时间 😇, 下次不折腾了~
+
+## 体验感想
+
+根据我的性能测试, 网站加载速度 是比 `VitePress` 要慢的, 主要是以下两方面
+
+- 项目冷启动
+- 页面热更新
+
+实际上就是 `webpack` 和 `vite` 的区别 😂 , 希望有朝一日也将 `Docusaurus` 和 `Vite` 结合在一起.
+
+## 部署与自动化构建
+
+- 目前部署在`github pages`, 后续会托管至 `vercel`
+- 采用`github action`自动化构建
+- 后续还会套上`Cloud flare`的 cdn 架势

@@ -1,0 +1,108 @@
+import styles from './friendLink.module.scss';
+import Image from '@theme/IdealImage';
+import gongchun from '/static/img/animate/1.jpg';
+import ku from '/static/img/animate/2.jpg';
+import huiye from '/static/img/animate/3.jpg';
+import violet from '/static/img/animate/4.jpg';
+import ace from '/static/img/animate/a.jpg';
+import sabo from '/static/img/animate/s.jpg';
+import luffy from '/static/img/animate/l.jpg';
+
+export default function friendLink() {
+  return (
+    <section className={styles.container}>
+      <div className={styles.card}>
+        <div className={styles.photo}>
+          <img src="/img/animate/1.jpg" />
+          {/* <Image img={gongchun} /> */}
+        </div>
+        <h1>宫村</h1>
+        <h2>宫村伊澄</h2>
+        <p>体型纤细，头发梳开露出脸庞后其实是很清秀和帅气的。</p>
+        <a href="https://www.bilibili.com/bangumi/play/ss36198/?spm_id_from=333.999.0.0">
+          了解更多
+        </a>
+      </div>
+      <div className={styles.card}>
+        <div className={styles.photo}>
+          <img src="/img/animate/2.jpg" />
+          {/* <Image img={ku} /> */}
+        </div>
+        <h1>堀</h1>
+        <h2>堀京子</h2>
+        <p>
+          在学校很活泼开朗，外貌出众亮眼、聪颖成绩优异，是班上很有人气的人。
+        </p>
+        <a href="https://www.bilibili.com/bangumi/play/ss36198/?spm_id_from=333.999.0.0">
+          了解更多
+        </a>
+      </div>
+      <div className={styles.card}>
+        <div className={styles.photo}>
+          <img src="/img/animate/3.jpg" />
+          {/* <Image img={huiye} /> */}
+        </div>
+        <h1>辉夜</h1>
+        <h2>四宫辉夜</h2>
+        <p>
+          秀知院学园高中部学生会副会长,喜欢白银御行，但高度的自尊心让她在初期不承认此事。
+        </p>
+        <a href="https://www.bilibili.com/bangumi/play/ss26274/?spm_id_from=333.999.0.0">
+          了解更多
+        </a>
+      </div>
+      <div className={styles.card}>
+        <div className={styles.photo}>
+          <img src="/img/animate/4.jpg" />
+          {/* <Image img={violet} /> */}
+        </div>
+        <h1>薇尔莉特</h1>
+        <h2>薇尔莉特·伊芙加登</h2>
+        <p>
+          因戰爭失去雙手，後來裝上義肢的少女——是一名所屬C·H郵政公司的「自動手記人偶」。
+        </p>
+        <a href="https://www.bilibili.com/bangumi/play/ss21542?spm_id_from=333.337.0.0">
+          了解更多
+        </a>
+      </div>
+      <div className={styles.card}>
+        <div className={styles.photo}>
+          <img src="/img/animate/a.jpg" />
+          {/* <Image img={ace} /> */}
+        </div>
+        <h1>艾斯</h1>
+        <h2>“火拳”艾斯</h2>
+        <p>
+          波特卡斯·D·艾斯，日本漫画《航海王》及其衍生作品中的角色。萨博与路飞的结义兄弟。
+        </p>
+        <a href="#">了解更多</a>
+      </div>
+      <div className={styles.card}>
+        <div className={styles.photo}>
+          <img src="/img/animate/s.jpg" />
+          {/* <Image img={sabo} /> */}
+        </div>
+        <h1>萨博</h1>
+        <h2>革命军的二把手</h2>
+        <p>
+          萨博，日本漫画《航海王》及其衍生作品中的角色。是路飞与艾斯的结义兄弟。
+        </p>
+        <a href="#">了解更多</a>
+      </div>
+      <div className={styles.card}>
+        <div className={styles.photo}>
+          <img src="/img/animate/l.jpg" />
+          {/* <Image img={luffy} /> */}
+        </div>
+        <h1>路飞</h1>
+        <h2>草帽小子</h2>
+        <p>
+          蒙奇·D·路飞，日本漫画《航海王》及其衍生作品中的男主角。是草帽海贼团的船长。
+        </p>
+        <a href="#">了解更多</a>
+      </div>
+    </section>
+  );
+}
+
+<friendLink />
