@@ -1,17 +1,17 @@
-# Website
+# Blog
 
-This website is built using [Docusaurus 2](https://docusaurus.io/), a modern static website generator.
+This website is built using [Docusaurus 2](https://docusaurus.io/), a modern static website generator. This website use for my person blog to record note , link and etc...
 
 ### Installation
 
 ```
-$ yarn
+$ pnpm i
 ```
 
 ### Local Development
 
 ```
-$ yarn start
+$ pnpm start
 ```
 
 This command starts a local development server and opens up a browser window. Most changes are reflected live without having to restart the server.
@@ -19,7 +19,7 @@ This command starts a local development server and opens up a browser window. Mo
 ### Build
 
 ```
-$ yarn build
+$ pnpm run build
 ```
 
 This command generates static content into the `build` directory and can be served using any static contents hosting service.
