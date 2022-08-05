@@ -1,0 +1,88 @@
+---
+slug: github
+title: 使用github-action自动化部署Docusaurus
+authors: lavard
+tags: [github]
+---
+
+
+
+## 什么是github-action?
+
+简单来说,就是可以启动一个小虚拟机进行一系列自动化操作 ,包括但不限于 打包、部署、推送、定时任务..etc, 本站就是由Github-action自动化部署而来, 更新博客后推送便会自动化构建并部署到github-pages, 本文将记录我搭建的简单过程.
+
+
+## 配置
+:::info 创建gh-pages分支 (名字任意取,但需要至少2个分支 或者 2个仓库)
+
+Github Pages 会从默认分支（一般是 master/main）或者 gh-pages 分支中提取部署文件（运行 docusaurus build 产生的文件）。文件可以放在根目录，也可以放在 /docs 目录中。 你可以在仓库的 Settings > Pages 处配置。 这个分支会被称作「部署分支」。
+
+:::
+
+> docusaurus.config.js
+
+```js
+module.exports = {
+  // ...
+  url: 'https://endiliey.github.io', // 你的网站 URL
+  baseUrl: '/',
+  projectName: 'endiliey.github.io', // 你的仓库名
+  organizationName: 'endiliey',  // 你的组织名 或者 用户名
+  trailingSlash: false
+  // ...
+};
+```
+
+> deploy
+
+```powershell
+cmd /C "set "GIT_USER=lalalavard" && yarn deploy"
+```
+
+
+## github-action 脚本
+
+> 在.github/workflows/deploy.yml 添加以下内容,没有则自行创建
+
+```yaml
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+    # 如果你想要进一步定义触发条件、路径等，可以查看文档
+    # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#on
+
+jobs:
+  deploy:
+    name: Deploy to GitHub Pages
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: yarn
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+      - name: Build website
+        run: yarn build
+
+      # 部署到 GitHub Pages 的热门选择：
+      # 文档：https://github.com/peaceiris/actions-gh-pages#%EF%B8%8F-docusaurus
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          # 要发布到 `gh-pages` 分支的构建输出：
+          publish_dir: ./build
+          # 下面两行会将此次部署 commit 的作者设置为官方的
+          # GH-Actions 机器人：
+          # https://github.com/actions/checkout/issues/13#issuecomment-724415212
+          # 如果不设置这两个字段，GH actions 机器人会被默认使用。
+          # 你可以用自己的用户信息替换它们。
+          user_name: github-actions[bot]
+          user_email: 41898282+github-actions[bot]@users.noreply.github.com
+```
