@@ -3,3 +3,68 @@ sidebar_position: 9
 ---
 
 # useRef
+
+
+:::info useRef的作用让你引用一个不需要渲染的值。(比如绑定页面的DOM的元素值)
+- 返回一个可变的 ref 对象，该对象只有个 current 属性，初始值为传入的参数( initialValue )。
+- 返回的 ref 对象在组件的整个生命周期内保持不变
+- 当更新 current 值时并不会重新渲染组件(re-render) ，这是与 useState 不同的地方
+- 更新 useRef 是 side effect (副作用)，所以一般写在 useEffect 或 event handler 里
+- useRef 类似于类组件的 this
+:::
+
+## 使用
+1. 用ref引用一个值
+1. 用一个引用来操作DOM
+1. 避免重新创建引用的内容
+
+```jsx
+import { useRef } from 'react';
+
+export default function Counter() {
+  let ref = useRef(0);
+
+  function handleClick() {
+    ref.current = ref.current + 1;
+    alert('You clicked ' + ref.current + ' times!');
+  }
+
+  return (
+    <button onClick={handleClick}>
+      Click me!
+    </button>
+  );
+}
+```
+
+## 注意事项
+
+:::warning
+
+```jsx
+function MyComponent() {
+  // ...
+  // 🚩 Don't write a ref during rendering
+  myRef.current = 123;
+  // ...
+  // 🚩 Don't read a ref during rendering
+  return <h1>{myOtherRef.current}</h1>;
+}
+```
+You can read or write refs from event handlers or effects instead.
+```jsx
+function MyComponent() {
+  // ...
+  useEffect(() => {
+    // ✅ You can read or write refs in effects
+    myRef.current = 123;
+  });
+  // ...
+  function handleClick() {
+    // ✅ You can read or write refs in event handlers
+    doSomething(myOtherRef.current);
+  }
+  // ...
+}
+```
+:::

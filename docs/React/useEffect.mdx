@@ -3,3 +3,121 @@ sidebar_position: 6
 ---
 
 # useEffect
+
+
+## side Effect
+
+### 纯函数
+> 基于函数式编程范式中的纯函数概念，如果一个函数满足以下两个条件，就可以说它是纯的。
+
+- 其返回值仅由其输入值决定
+- 对于相同的输入值，其返回值总是相同的
+
+> 纯
+
+```jsx {5,6}
+const sum = (a,b) => {
+  return a + b;
+}
+sum(1,2)  // 3
+// 无论调用多少次, 只要传入1和2, 返回的结果永远是3
+// 返回值只由 函数参数决定 , 与外界变量无关
+````
+
+> 不纯
+
+```jsx {6}
+const a = 2;
+const sum = (b) => {
+  return a + b;
+}
+sum(1)
+// 函数的返回值不确定, 因为使用了外部变量 a , 即便使用了相同的参数输入, 返回结果依然无法保证是相同的
+```
+:::danger 纯组件
+- 不纯的话 JSX是不可预测的，多次调用这个组件将产生不同的JSX
+- 一个组件必须是纯的，它不应该改变渲染前存在的任何对象或变量
+- 相同的输入，相同的输出。在输入相同的情况下，一个组件应该总是返回相同的JSX，
+- 可以通过prop来解决，返回的JSX只取决于props的值
+:::
+
+
+### 副作用
+
+:::tip
+- 副作用是不可预测的，因为它们是与 "外部世界 "一起进行的行动。
+- 当我们需要在我们的React组件之外做一些事情时，我们会执行一个副作用。然而，执行一个副作用不会给我们一个可预测的结果。
+- 这就是`useEffect`存在的原因：提供一种方法来处理在本来是纯React组件中执行这些副作用
+:::
+
+> 常见的副作用包括。
+- console.log
+- 向API发出请求，以获取后端服务器的数据
+- 与浏览器API进行交互（即直接使用文档或窗口）
+- 使用不可预知的计时功能，如setTimeout或setInterval
+
+### 使用
+
+```jsx
+// 1. import useEffect
+import { useEffect } from 'react';
+
+function MyComponent() {
+  // 2. call it above the returned JSX
+  // 3. pass two arguments to it: a function and an array
+  useEffect(() => {}, []);
+
+  // return ...
+}
+```
+
+### 清除副作用
+
+```jsx
+function Timer() {
+  const [time, setTime] = useState(0);
+
+  useEffect(() => {
+    let interval = setInterval(() => setTime(1), 1000);
+
+    return () => {
+      // setInterval cleared when component unmounts
+      clearInterval(interval);
+    }
+  }, []);
+}
+```
+
+## 模拟生命周期
+
+### 模拟componentDidMount
+
+```jsx
+// 第二个参数, 依赖项为空数组
+useEffect(()=>{console.log('第一次渲染时调用')},[])
+```
+
+### 模拟componentDidUpdate
+```jsx
+//没有第二个参数代表监听所有的属性更新
+useEffect(()=>{console.log('任意属性值改变')})
+//监听多个属性的变化需要将属性作为数组传入第二个参数
+useEffect(()=>{console.log('a的值变化了')},[a,b])
+```
+### 模拟componentWillUnmount
+```jsx
+// 使用return
+useEffect(()=>{
+  const timer = setTimeout(()=>{
+      ...
+  },1000)
+  return()=>{
+      console.log('组件销毁前清除定时器/监听器')
+      clearTimerout(timer)
+  }
+})
+```
+
+### 自动处理依赖项
+
+[黄玄](https://twitter.com/Huxpro) 正在为React 开发新的 API `React Forget`来解决 `useEffect` 依赖项的问题,

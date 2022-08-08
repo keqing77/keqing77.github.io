@@ -51,11 +51,10 @@ var config = {
     organizationName: 'lalalavard',
     trailingSlash: false,
     deploymentBranch: 'gh-pages',
-    // deploymentBranch:'main',
+    themes: ['@docusaurus/theme-live-codeblock'],
     presets: [
         [
             'classic',
-            // /** @type {import('@docusaurus/preset-classic').Options} */
             {
                 docs: {
                     sidebarPath: require.resolve('./sidebars.js')
@@ -72,6 +71,7 @@ var config = {
         ],
     ],
     plugins: [
+        // '@docusaurus/theme-live-codeblock',
         'docusaurus-plugin-sass',
         '@docusaurus/plugin-ideal-image',
         // {
@@ -97,13 +97,18 @@ var config = {
             });
         },
     ],
-    themeConfig: 
-    /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
-    {
+    themeConfig: {
         algolia: {
             appId: '1ZY741ILUR',
             apiKey: '4ef71d2554db6af0cfddbe00c548855c',
             indexName: 'lavard'
+        },
+        liveCodeBlock: {
+            playgroundPosition: 'bottom'
+        },
+        tableOfContents: {
+            minHeadingLevel: 2,
+            maxHeadingLevel: 4
         },
         navbar: navbarConfig,
         footer: footerConfig

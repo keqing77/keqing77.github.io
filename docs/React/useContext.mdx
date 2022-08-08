@@ -3,3 +3,40 @@ sidebar_position: 8
 ---
 
 # useContext
+
+:::tip 通过useContext可以让组件获取context提供的数据，而不需要通过props一级一级传递
+
+React组件间通信通过props的传递，但如果是嵌套层级很深的话，需要给每一层都加上props
+可以通过useContext在组件中读取和订阅上下文的数据，实现跨组件的数据通信与共享
+:::
+
+```jsx
+import React, { useState, useContext } from 'react'; //引入react和useContext
+
+//创建一个上下文  context 实际上代表就是全局变量
+const Con = createContext(null)
+
+const Child = () =>
+{
+    // 使用上下文，因为传入的是对象，则接受也应该是对象
+    const {count, setCount} = useContext(Con)
+
+    const add = () =>  setCount(count + 1)
+
+    return  <button onClick={add}>{count} | 点击自增</button>
+}
+
+const Context = () =>
+{
+    const [count, setCount] = useState(0)
+
+    return (
+        // 指定上下文使用范围，使用provider,并传入读数据和写入据
+        <Con.Provider value={{count, setCount}}>
+            <Child />
+        </Con.Provider>
+    )
+}
+
+export default Context
+```

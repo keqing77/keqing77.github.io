@@ -2,4 +2,114 @@
 sidebar_position: 3
 ---
 
+
+
 # 组件
+
+
+## UI = F(state)
+
+:::tip 什么是组件?
+组件是React的核心概念之一。它们是你构建用户界面（UI）的基础 , React让你把你的标记、CSS和JavaScript组合成自定义的 "组件"，为你的应用程序提供可重用的UI元素。
+随着项目的发展，你会注意到许多设计都可以通过重复使用你已经写好的组件来组成，从而加快你的开发速度。
+- 其实就和HTML一样, 每一个标签都有自己的作用和界面
+- 组件就是将不同的标签、UI、逻辑组合在一起 抽离出来作为一个单独的整体
+- 组件可以有自己的状态(state) , props, 可以复用
+:::
+
+一个页面的结构可能是这样的, 每个页面的一部分都可以抽离成一个组件
+
+```jsx
+<PageLayout>
+  <NavigationHeader>
+    <SearchBar />
+    <Link to="/docs">Docs</Link>
+  </NavigationHeader>
+  <Sidebar />
+  <PageContent>
+    <TableOfContents />
+    <DocumentationText />
+  </PageContent>
+</PageLayout>
+```
+
+## React组件是一个JavaScript函数
+
+:::info React组件最终需要返回UI
+- React组件可以使用 class 类组件的写法
+- 但推荐使用 function 函数式组件的写法
+:::
+
+```jsx {2,11}
+function Profile() {
+  return (
+    <img
+      src="https://i.imgur.com/MK3eW3As.jpg"
+      alt="Katherine Johnson"
+    />
+  );
+}
+
+export default function Gallery() {
+  return (
+    <section>
+      <h1>Amazing scientists</h1>
+      <Profile />
+      <Profile />
+      <Profile />
+    </section>
+  );
+}
+```
+
+## props
+
+:::tip props
+- React组件使用props来相互交流。每个父级组件都可以通过给其子级组件提供道具来传递一些信息。
+- Props可能会让你想起HTML属性，但你可以通过它们传递任何JavaScript值，包括对象、数组和函数。
+:::
+
+
+```jsx
+import { getImageUrl } from './utils.js';
+
+function Avatar({ person, size }) {
+  return (
+    <img
+      className="avatar"
+      src={getImageUrl(person)}
+      alt={person.name}
+      width={size}
+      height={size}
+    />
+  );
+}
+
+export default function Profile() {
+  return (
+    <div>
+      <Avatar
+        size={100}
+        person={{
+          name: 'Katsuko Saruhashi',
+          imageId: 'YfeOqp2'
+        }}
+      />
+      <Avatar
+        size={80}
+        person={{
+          name: 'Aklilu Lemma',
+          imageId: 'OKS67lh'
+        }}
+      />
+      <Avatar
+        size={50}
+        person={{
+          name: 'Lin Lanying',
+          imageId: '1bX5QH6'
+        }}
+      />
+    </div>
+  );
+}
+```

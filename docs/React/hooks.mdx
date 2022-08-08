@@ -3,3 +3,101 @@ sidebar_position: 4
 ---
 
 # hooks
+
+
+## hooks(函数式组件)
+
+:::tip hooks与class对比
+相较于传统的class类组件无论是性能上还是写法上都更具优势。
+
+- 因为是用函数来写组件，所以函数式组件没有生命周期，但可以采用useEffect模拟生命周期
+- 不需要mixin和HOC高阶组件(函数中返回函数的组件)
+- 没有类组件烦人的this指向问题
+- 自定义Hooks封装状态，更好的实现状态共享
+- 编程思维由面向对象转为函数式编程
+:::
+
+### class类组件
+
+> 要写`constructor`, 要继承` Comonent` 类, 还要写烦人的`this` , 你干嘛~
+
+```jsx {4-10,14-21}
+import React, { Component } from 'react';
+
+class App extends Component {
+  constructor(props){
+    super(props);
+    this.state = {
+         data: 'www.javatpoint.com'
+      }
+    this.handleEvent = this.handleEvent.bind(this);
+  }
+  handleEvent(){
+    console.log(this.props);
+  }
+  render() {
+    return (
+      <div className="App">
+    <h2>React Constructor Example</h2>
+    <input type ="text" value={this.state.data} />
+        <button onClick={this.handleEvent}>Please Click</button>
+      </div>
+    );
+  }
+}
+export default App;
+```
+
+### hooks函数组件
+
+> 没有烦人的this, 可以维护自己的`state`,不需要`constructor`,不需要继承
+
+```jsx {3,6-11}
+import React, { useState } from 'react';
+function MyButton() {
+  // ... we're moving code from here ...
+}
+
+export default function MyApp() {
+  const [count, setCount] = useState(0);
+
+  function handleClick() {
+    setCount(count + 1);
+  }
+
+  return (
+    <div>
+      <h1>Counters that update separately</h1>
+      <MyButton />
+      <MyButton />
+    </div>
+  );
+}
+```
+
+:::warning 使用hooks要注意的
+
+- 不要在循环，条件或嵌套函数中调用Hook，必须始终在React函数的顶层使用Hook。这是因为React需要利用调用顺序来正确更新相应的状态，以及调用相应的钩子函数。一旦在循环或条件分支语句中调用Hook，就容易导致调用顺序的不一致性，从而产生难以预料到的后果。
+- 只能在React函数式组件或自定义Hook中使用Hook。
+- hooks的性能优化问题不简单, 或者说React的性能优化~
+
+:::
+
+## 官方hooks
+> 常用的大概一下7个 , 其他用的比较少
+- useState
+- useEffect
+- useContext
+- useReducer
+- useMemo
+- useCallback
+- useRef
+
+
+## 第三方hook
+- [react-use](https://github.com/streamich/react-use)
+- [ahook](https://ahooks.js.org/)
+
+[//]: # (## 自定义hooks)
+
+[//]: # ([详情查看]&#40;http://lavard.cn/docs/React/%E8%87%AA%E5%AE%9A%E4%B9%89hook&#41;)
