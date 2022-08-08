@@ -2,6 +2,28 @@
 sidebar_position: 4
 ---
 
-什么是 HTML HTML 是用来描述网页的一种语言。 HTML 指的是超文本标记语言:HyperTextMarkupLanguage，HTML 不是一种编程语言,而是一种标记语言。您可以使用 HTML 来建立自己的 WEB 站点，HTML 运行在浏览器上，由浏览器来解析。你所看到的的网页都是 HTML，它包括一系列标签，通过这些标签可以将文本、图片、视频、音频、表格、链接等元素放入页面中，这些元素是一个网站页面的基本组成部分。
+## Drag API
+> 拖拽API,用于在网页上拖拽页面元素
 
-你可以在网站中右键选择查看网页源代码，可以浏览该网页的前端基础结构，HTML 被称为网页的骨架。
+:::tip HTML5 drag API
+- dragstart：事件主体是被拖放元素，在开始拖放被拖放元素时触发。
+- darg：事件主体是被拖放元素，在正在拖放被拖放元素时触发。
+- dragenter：事件主体是目标元素，在被拖放元素进入某元素时触发。
+- dragover：事件主体是目标元素，在被拖放在某元素内移动时触发。
+- dragleave：事件主体是目标元素，在被拖放元素移出目标元素是触发。
+- drop：事件主体是目标元素，在目标元素完全接受被拖放元素时触发。
+- dragend：事件主体是被拖放元素，在整个拖放操作结束时触发
+
+
+:::
+
+## 地理API
+> 获取用户地理数据
+
+```html
+window.navigator.geolocation {
+    getCurrentPosition:  fn  用于获取当前的位置数据
+    watchPosition: fn  监视用户位置的改变
+    clearWatch: fn  清除定位监视
+}　　
+```
