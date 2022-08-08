@@ -1,0 +1,121 @@
+---
+sidebar_position: 8
+---
+
+# 严格模式
+
+:::info 严格模式
+通过在脚本或函数的开头添加 “use strict”; 来声明严格模式。一旦声明了严格模式，它所在的作用域内就必须按照严格模式来写JS。ES6的class默认开启严格模式
+“use strict” 指令只能在脚本或函数的开头被识别。规定了哪些写法不被允许。
+:::
+
+### 1. 在不声明变量的情况下使用变量，是不允许的。
+
+```js
+ "use strict";
+ x = 3.14; //报错
+```
+
+### 2. 重复参数名是不允许的。
+
+```js
+ "use strict";
+ function test(a1,a1){} //报错
+```
+
+### 3. 八进制数值文本是不允许的。
+
+```js
+ "use strict";
+ var x = 010; //报错
+```
+
+### 4. 转义字符是不允许的。
+
+```js
+ "use strict";
+ var x = \010; //报错
+```
+
+
+### 5. 写入只读属性是不允许的。
+
+```js
+ "use strict";
+ var obj = {};
+ Object.defineProperty(obj, "x", {value:0, writable:false});
+
+ obj.x = 3.14; //报错
+```
+
+
+### 6. 写入只能获取的属性是不允许的。
+
+```js
+ "use strict";
+ var obj = {get x() {return 0} };
+ obj.x = 3.14;   //报错
+ ```
+
+
+### 7. 删除变量/函数/不可删除的属性是不允许的。
+
+```js
+ "use strict";
+ var x = 123;
+ delete x; //删除变量报错
+
+ function test(p1, p2) {};
+ delete test;  //删除函数报错
+
+ delete Object.prototype;//删除不可删除的属性报错
+```
+
+### 8. 字符串 “eval” 、"arguments"不可用作变量。
+
+```js
+ "use strict";
+ var eval = 123; //报错
+ var arguments = 456; //报错
+ ```
+
+
+
+### 9. with 语句是不允许的。
+
+```js
+ "use strict";
+ with (document){
+ write("您好 !");
+ write("这个文档的标题是 :  "+ title);
+ }; // 报错
+```
+
+### 10. 处于安全考虑，不允许 eval() 在其被调用的作用域中创建变量。
+
+```js
+"use strict";
+eval ("var x = 2");
+alert (x); //报错
+ ```
+
+### 11. 禁止this关键字指向全局对象，此时的this是undefined。
+
+```js
+function f(){
+    return !this;
+}
+// 返回false，因为"this"指向全局对象，"!this"就是false
+
+function f(){
+    "use strict";
+    return !this;
+}
+// 返回true，因为严格模式下，this的值为undefined，所以"!this"为true。
+ ```
+
+### 12.不允许使用为未来预留的关键词。
+
+`1、implements 2、interface   3、let
+4、package    5、private     6、protected
+7、public     8、static      9、yield`
