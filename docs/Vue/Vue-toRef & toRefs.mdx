@@ -3,3 +3,51 @@ sidebar_position: 5
 ---
 
 # Vue-toRef & toRefs
+
+解构赋值后原有的响应式会被消除, 可以通过 `toRef` 和`toRefs` 重新获得响应式
+
+- `toRef`：用来给抽离响应式对象中的某一个属性，并把该属性包裹成 ref 对象，使其和原对象产生链接。 toRef 的本质是引用，修改响应式数据会影响原始数据。
+- `toRefs`：用来把响应式对象转换成普通对象，把对象中的每一个属性，包裹成ref对象。 toRefs 就是 toRef 的升级版，只是toRefs 是把响应式对象进行转换，其余的特性和 toRef 无二
+
+## toRef
+
+```js
+const state = reactive({
+  foo: 1,
+  bar: 2
+})
+
+const fooRef = toRef(state, 'foo')
+
+// mutating the ref updates the original
+fooRef.value++
+console.log(state.foo) // 2
+
+// mutating the original also updates the ref
+state.foo++
+console.log(fooRef.value) // 3
+```
+
+## toRefs
+
+```js
+const state = reactive({
+  foo: 1,
+  bar: 2
+})
+
+const stateAsRefs = toRefs(state)
+/*
+Type of stateAsRefs: {
+  foo: Ref<number>,
+  bar: Ref<number>
+}
+*/
+
+// The ref and the original property is "linked"
+state.foo++
+console.log(stateAsRefs.foo.value) // 2
+
+stateAsRefs.foo.value++
+console.log(state.foo) // 3
+```

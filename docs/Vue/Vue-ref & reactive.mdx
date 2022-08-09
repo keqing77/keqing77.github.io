@@ -3,3 +3,49 @@ sidebar_position: 4
 ---
 
 # Vue-ref & reactive
+:::info 声明响应式数据
+不同于Vue2中的`data()` , Vue3声明响应式数据需要调用 `reactive()` api
+:::
+
+---
+
+- [`reactive源码:https://github1s.com/vuejs/core/blob/HEAD/packages/reactivity/src/reactive.ts#L90-L91`](https://github1s.com/vuejs/core/blob/HEAD/packages/reactivity/src/reactive.ts#L90-L91)
+
+- [`ref源码:https://github1s.com/vuejs/core/blob/HEAD/packages/reactivity/src/ref.ts#L73-L74`](https://github1s.com/vuejs/core/blob/HEAD/packages/reactivity/src/ref.ts#L73-L74)
+
+
+:::danger 两者异同
+- `ref`接收内部值(inner value)返回响应式`Ref`对象, `reactive`返回响应式代理`Proxy`对象
+- 从定义上看`ref`通常用于处理单值的响应式，`reactive`用于处理对象类型的数据响应式
+- 两者均是用于构造响应式数据，但是`ref`主要解决`原始值的响应式问题`
+- ref返回的响应式数据在JS中使用需要加上`.value`才能访问其值，在视图中使用会自动脱ref，不需要`.value` ;
+  - ref可以接收对象或数组等非原始值，但内部依然是`reactive`实现响应式;
+  - reactive内部如果接收Ref对象会自动脱ref;使用展开运算符(..)展开reactive返回的响应式对象会使其失去响应性，可以结合toRefs()将值转换为Ref对象之后再展开。
+- reactive内部使用Proxy代理传入对象并拦截该对象各种操作(trap)，从而实现响应式。
+ref内部封装一个Reflmpl类，并设置get valuelset value，拦截用户对值的访问，从而实现响应式。
+- reactive()只接受对象，不接受JS原始值（String, Boolean, Number, BigInt, Symbol, null, undefined）
+- ref()背后其实是调用reactive(), reactive()对对象有效，而ref()调用reactive()，所以对象对两者都有效。
+:::
+
+## reactive
+> Returns a reactive proxy of the object.
+> `返回该对象的响应式代理(proxy)`
+
+```js
+const person = reactive({
+  name: 'Albert',
+  age: 30,
+  isNinja: true,
+});
+```
+
+
+## ref
+> Takes an inner value and returns a reactive and mutable ref object, which has a single property .value that points to the inner value.
+> 接受一个内部值，并返回一个反应性的、可变的`Ref对象`，该对象有一个指向内部值的单一属性`.value`。
+
+```js
+const name = ref('Albert');
+const age = ref(30);
+const isNinja = ref(true);
+```

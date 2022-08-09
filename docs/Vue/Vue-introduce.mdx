@@ -3,3 +3,152 @@ sidebar_position: 1
 ---
 
 # Vue-introduce
+
+## ✨Vue的由来
+先简单回顾一下前端工程化的发展吧
+- Angular.js在2009年Google内部使用并开源
+- React是Facebook在2013年开源的一款前端框架
+- Vue结合了Angular和React的优势,与2014年发布
+
+## Vue作者
+> 尤雨溪, `中国人`, 早年就读于`上海复旦附中`,本科毕业于`Colgate University`艺术史，研究生阶段在`Parsons`设计学院获得Design & Technology艺术硕士学位，是设计和技术的混合。正是在读硕士期间，他偶然接触到了`JavaScript` ，从此被这门编程语言深深吸引，开启了自己的前端生涯, 距他本人采访所说: 开始做前端的一个重要原因是，没有人帮他把网站设计出来的作品放到网站上给别人欣赏, 随后入职`Google`, 后发布个人项目`Vue`大获成功全职去维护`vuejs` , 如今Vue已经是前端三大框架之一
+
+:::tip 尤雨溪也是个轮子哥
+尤雨溪得益于Vue的蓬勃发展, 也造了许多造福业界的轮子,其中比较著名的有
+-  `Vue` (前端star数量最多)
+- `Vite` (下一代前端构建工具)
+- `VuePress & VitePress` (本站所采用的的静态网站生成器)
+- `他懂个锤子Vue` 始作俑者 ...etc
+
+:::
+
+## Vue特点
+- 中文社区活跃 (指知乎尤大😁)
+- 性能卓越, API简单易用, 易上手 (学完前端三件套就可以看文档上手撸)
+- SFC(single file component)
+-
+
+## 学习版本
+> 都2022年了,还不开始学Vue3😡
+
+传送文档: [Vue3](https://vuejs.org/)
+
+
+```bash
+pnpm create vite
+# chose vue
+```
+
+单文件组件, `.vue`会编译成`html`, 包含`tmplate(结构)`,`style(样式)`,`script(逻辑)` 三部分
+
+## 基础语法
+
+### 数据绑定
+`<span>Message: {{ msg }}</span>` Vue使用双大括号的语法插值 , 轻松将` 组件实例的属性值` 关联在一起, 你还可以在其中写`JavaScript`表达式
+
+```html
+{{ number + 1 }}
+
+{{ ok ? 'YES' : 'NO' }}
+
+{{ message.split('').reverse().join('') }}
+
+<div :id="`list-${id}`"></div>
+```
+
+### 属性绑定
+`<img :src="xxx" />` 使用v-bind:属性名=值 ,进行属性值绑定, `v-bind`被称为`指令` , 你可以简写为 `:`
+
+### 指令(directive)
+> 指令是带有v-前缀的特殊属性 , 启发于` Angular` 的 `ng-xx`
+
+#### v-if
+```html
+<script setup>
+const seen = true;
+</script>
+
+<p v-if="seen">Now you see me</p>  // Now you see me
+```
+
+#### v-show
+```html
+<script setup>
+const seen = true;
+</script>
+
+<p v-show="seen">Now you see me</p>  // Now you see me
+```
+
+#### v-model
+```html
+<script setup>
+const searchText = true;
+</script>
+
+<input v-model="searchText" />
+```
+
+#### v-for
+```html
+<div v-for="item in items">
+  {{ item.text }}
+</div>
+
+<div v-for="(item, index) in items"></div>
+<div v-for="(value, key) in object"></div>
+<div v-for="(value, name, index) in object"></div>
+
+<div v-for="item in items" :key="item.id">
+  {{ item.text }}
+</div>
+```
+#### v-bind
+```html
+<!--
+Note that there are some constraints to the argument expression,
+as explained in the "Dynamic Argument Value Constraints" and "Dynamic Argument Syntax Constraints" sections below.
+-->
+<a v-bind:[attributeName]="url"> ... </a>
+
+<!-- shorthand -->
+<a :[attributeName]="url"> ... </a>
+```
+#### v-on
+```html
+<a v-on:[eventName]="doSomething"> ... </a>
+
+<!-- shorthand -->
+<a @[eventName]="doSomething">
+```
+#### v-slot
+```html
+<!-- Named slots -->
+<BaseLayout>
+  <template v-slot:header>
+    Header content
+  </template>
+
+  <template v-slot:default>
+    Default slot content
+  </template>
+
+  <template v-slot:footer>
+    Footer content
+  </template>
+</BaseLayout>
+
+<!-- Named slot that receives props -->
+<InfiniteScroll>
+  <template v-slot:item="slotProps">
+    <div class="item">
+      {{ slotProps.item.text }}
+    </div>
+  </template>
+</InfiniteScroll>
+
+<!-- Default slot that receive props, with destructuring -->
+<Mouse v-slot="{ x, y }">
+  Mouse position: {{ x }}, {{ y }}
+</Mouse>
+```

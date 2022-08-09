@@ -3,3 +3,111 @@ sidebar_position: 2
 ---
 
 # Vue-setup & composition-api
+
+## setup
+
+> setup函数是 Vue3 中新增的函数，它是我们在编写组件时，使用 Composition API 的入口
+- 写法一: `setup()`
+- 写法二: `<script setup> </script>` (推荐)
+
+### `setup()`
+
+```html {4}
+<script>
+import { ref } from 'vue'
+
+export default {
+  setup() {
+    const count = ref(0)
+    // expose to template and other options API hooks
+    return {
+      count
+    }
+  },
+
+  mounted() {
+    console.log(this.count) // 0
+  }
+}
+</script>
+
+<template>
+  <button @click="count++">{{ count }}</button>
+</template>
+```
+
+### `<script setup>`
+
+```html
+<script setup>
+// variable
+const msg = 'Hello!'
+
+// functions
+function log() {
+  console.log(msg)
+}
+</script>
+
+<template>
+  <button @click="log">{{ msg }}</button>
+</template>
+```
+
+## composition API
+> Vue3 支持Vue2 的`options API` , 但推荐使用 `composition API`
+
+### `options API的问题`
+:::danger 项目增长维护困难
+- 不同逻辑的状态都集中在`data`,需要来回翻滚页面
+- 不同逻辑的方法散落在文件的各处, 无法集中起来, 这在开发时心智负担较重
+- 逻辑复用较为困难 , 需要 `mixin`等等
+:::
+
+optionsAPI
+```js {3}
+export default {
+  data() {
+    return { a: 1 }
+  },
+  methods: {
+    plus() {
+      this.a++
+    }
+  },
+  created() {
+    this.plus()
+    console.log(this.a) // => 2
+  }
+}
+```
+### `compostion API`
+```html
+<script setup>
+import { ref, onMounted } from 'vue'
+
+// reactive state
+const count = ref(0)
+
+// functions that mutate state and trigger updates
+function increment() {
+  count.value++
+}
+
+// lifecycle hooks
+onMounted(() => {
+  console.log(`The initial count is ${count.value}.`)
+})
+</script>
+
+<template>
+  <button @click="increment">Count is: {{ count }}</button>
+</template>
+```
+:::info 对比
+- 相同的颜色区域 代表同一个逻辑
+- options API 的 数据 , 方法 散落在文件的不同方位 , 相互之间耦合度过高,难以抽离复用
+- composition API 的 数据 , 方法 集中在一起, 且能抽离以达到复用
+:::
+
+![对比](https://vuejs.org/assets/composition-api-after.e3f2c350.png)

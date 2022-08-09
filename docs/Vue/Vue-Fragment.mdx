@@ -3,3 +3,58 @@ sidebar_position: 10
 ---
 
 # Vue-Fragment
+
+:::warning Fragment(碎片化节点)
+在`Vue2` / `React`中代表任何Vue组件的Vue实例需要绑定到一个单一的DOM元素中。
+- 这是因为需要构建VNode，而VNode只能有一个根节点 (树结构只有一个根节点)
+- 原因就是Fragment会将不同节点碎片化。会在最外层生成一个Fragment标签，它是虚拟的，并不会在DOM树中呈现，这样就可以把组件功能绑定在单一元素，而不需要像之前一样创建一个多余DOM节点。
+:::
+
+##
+```html {3-4}
+<!-- Vue2 -->
+<template>
+    <h1>Vue2只能有一个根元素，一般用一个div包住</h1>
+    <h2>不然就会报错，React也是一样的</h2>
+</template>
+
+<!-- 得修改成
+<div>
+     <h1>Vue2只能有一个根元素，一般用一个div包住</h1>
+    <h2>不然就会报错，React也是一样的</h2>
+</div>
+-->
+
+<!-- Vue3 -->
+<template>
+    <h1>Vue3会自动在外层生成Fragment标签</h1>
+    <h2>虽然能在开发者工具看到, 但不是一个真实的DOM节点</h2>
+    <h3>不需要自己在外层添加一层标签包裹</h3>
+</template>
+
+```
+
+## React
+
+```jsx
+render() {
+  return (
+    <React.Fragment>
+      <ChildA />
+      <ChildB />
+      <ChildC />
+    </React.Fragment>
+  );
+}
+
+// or
+render() {
+  return (
+    <>
+      <ChildA />
+      <ChildB />
+      <ChildC />
+    </>
+  );
+}
+```

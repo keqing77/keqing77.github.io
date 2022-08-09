@@ -3,3 +3,41 @@ sidebar_position: 9
 ---
 
 # Vue-Teleport
+
+:::tip Teleport 传送门组件，提供一种简洁的方式，可以指定它里面的内容的父元素。
+- 和React的`Portals` 是一个作用
+- teleport 中的内容允许我们控制在任意的DOM中
+- 可以将子节点渲染到存在于父组件以外的 DOM 节点
+- 也可理解为将模板移动到DOM中 Vue app 之外的其他位置的技术。
+:::
+
+
+```html
+<template>
+    <h1>Vue3新特性 - Teleport 传送门</h1>
+    <!-- 挂载点  将这个挂载点 放到 index.html中-->
+    <!-- <div id="model"></div> -->
+    <teleport to="#model">
+		<!-- 挂载内容 -->
+		<div>title</div>
+        <div>I'am a Dialog.</div>
+	</teleport>
+</template>
+
+<!-- 项目根目录里面的 index.html -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vite App</title>
+  </head>
+  <body>
+    <div id="app"></div>
+
+    <div id="model"></div> <!-- 挂载点 -->
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
+```

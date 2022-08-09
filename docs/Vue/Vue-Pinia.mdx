@@ -3,3 +3,134 @@ sidebar_position: 12
 ---
 
 # Vue-Pinia
+
+文档地址:[pinia](https://pinia.vuejs.org/)
+
+> 事实上的VueX5, 代替VueX成为Vue3的官网状态管理库
+- 兼容性更好,支持Vue2, Vue3
+- 它采用了新的响应式系统，而且构建了一套全新的 Composition API
+- 写法更简单, 删除 `mutations`，只支持 `state`、`getters`、`actions`
+- 项目要使用 Vue3 进行开发，推荐无脑使用 Pinia，更加简洁，而且大小仅 1KB
+
+:::info 状态管理
+把需要`公用的状态 `放在`公共的仓库` 以提供 任意组件使用
+
+:::
+
+## 安装
+```bash
+# npm
+npm i pinia@next
+# yarn
+yarn add pinia@next
+# pnpm
+pnpm i pinia@next
+```
+
+## 引入
+
+```js
+// main.js
+import { createApp } from 'vue'
+import { createPinia } from 'pinia'
+import App from './App.vue'
+
+// 实例化 Vue
+const app = createApp(App)
+// 安装 Pinia
+app.use(createPinia())
+// 挂载在真实 DOM
+app.mount('#app')
+```
+
+## 使用
+
+### 定义 Store
+
+> 传统VueX版写法
+
+```js
+// store.js
+import { defineStore } from "pinia"
+
+// 对外部暴露一个 use 方法，该方法会导出我们定义的 state
+const useCounterStore = defineStore({
+  // 每个 store 的 id 必须唯一
+  id: 'counter',
+  // state 表示数据源
+  state: () => ({
+    count: 0
+  }),
+  // getters 类似于 computed，可对 state 的值进行二次计算
+  getters: {
+    double () {
+        // getter 中的 this 指向👉 state
+        return this.count * 2
+      },
+      // 如果使用箭头函数会导致 this 指向有问题
+      // 可以在函数的第一个参数中拿到 state
+    double: (state) => {
+        return state.count * 2
+      }
+  },
+  // actions 用来修改 state
+  actions: {
+    increment() {
+      // action 中的 this 指向👉 state
+      this.count++
+    },
+  }
+})
+
+export default useCounterStore
+```
+
+> 使用 function 的形式来创建 store
+
+```js
+import { ref, computed } from "vue"
+import { defineStore } from "pinia"
+
+// 对外部暴露一个 use 方法，该方法会导出我们定义的 state
+const useCounterStore = defineStore('counter', function () {
+  const count = ref(0)
+  const double = computed(() => count.value * 2)
+  function increment() {
+    count.value++
+  }
+  return {
+      count, double, increment
+  }
+})
+
+export default useCounterStore
+```
+
+### 使用store
+:::warning 注意事项
+Composition Api 中，不管是 `state `还是 `getter` 都需要通过 `computed` 方法来监听变化
+:::
+
+```js
+// Composition Api
+import { computed } from 'vue'
+import { useCounterStore } from '../stores/counter'
+export default {
+  name: 'HelloWorld',
+  setup() {
+    const counter = useCounterStore()
+    return {
+      // state 和 getter 都需要在使用 computed，这和 Options Api 一样
+      count: computed(() => counter.count),
+      double: computed(() => counter.double),
+      increment: () => { counter.count++ }, // 可以直接修改 state 的值
+      increment: counter.increment, // 可以引用 store 中定义的 action
+    }
+  }
+}
+```
+
+
+### 模块处理
+
+使用 defineStore 定义两个 完全是分离状态的 store，两个页面在引入时，也互不影响。最后打包的时候，首页的 js chunk 和商品页的 js chunk 会分别打包对应的 store

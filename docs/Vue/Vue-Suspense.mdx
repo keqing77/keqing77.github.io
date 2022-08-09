@@ -3,3 +3,37 @@ sidebar_position: 8
 ---
 
 # Vue-Suspense
+
+
+## Suspense
+
+:::tip Suspense组件用于在等待某个异步组件解析时显示的内容
+
+1. 使用Suspense组件包裹异步组件
+1. default显示异步组件加载完成之后的内容，也就是默认内容
+1. fallback在异步组件加载中显示，也就是加载中的内容(loading动画)
+
+`场景应用:`
+- 骨架屏
+- 在页面加载之前显示loading动画
+:::
+
+**Suspense 组件 只是一个带插槽的组件，只是它的插槽指定了 default 和 fallback 两种状态**
+
+```html
+<template>
+    <h1>Vue3新特性 - suspense</h1>
+	<Suspense>
+		<!-- default 是在异步组件加载完成之后显示 -->
+		<template #default>
+		 ...<!-- 异步渲染后的 -->
+		</template>
+		<!-- fallback 异步组件加载中显示 -->
+		<template #fallback>
+			<div>
+				Loading...
+			</div>
+		</template>
+	</Suspense>
+</template>
+```

@@ -3,3 +3,98 @@ sidebar_position: 6
 ---
 
 # Vue-watchEffect
+
+watchEffect 和 watch 的区别在于` watchEffect 是立即执行`
+- [`watch源码:https://github1s.com/vuejs/core/blob/HEAD/packages/runtime-core/src/apiWatch.ts`](https://github1s.com/vuejs/core/blob/HEAD/packages/runtime-core/src/apiWatch.ts)
+
+- [`watchEffect源码:https://github1s.com/vuejs/core/blob/HEAD/packages/runtime-core/src/apiWatch.ts`](https://github1s.com/vuejs/core/blob/HEAD/packages/runtime-core/src/apiWatch.ts)
+
+
+:::info watch
+
+- 用来侦听特定的数据源，并在回调函数中执行副作用。
+- 默认情况是惰性的，也就是说仅在侦听的源数据变更时才执行回调
+
+:::
+
+:::note watchEffect
+
+- 立即执行、立即监听（immediate）
+- 尽量使用watchEffect代替watch
+- 自动会感知代码依赖（自动收集依赖），不需要传递监听的内容（不需要像 watch 一样手动传入依赖）
+- 无法获得变化前的值（oldVal）
+
+:::
+
+
+
+```html
+<template>
+    <h1>Vue3新特性 -watchEffect 监听属性</h1>
+	<div>
+		<p>{{name}}</p>
+		<p>{{nameObj.name}}</p>
+	</div>
+</template>
+
+<script>
+    import { ref, reactive, watch, watchEffect } from 'vue'
+
+    export default {
+        setup() {
+            // 监听基本类型
+            const name = ref('张三')
+            setTimeout(() => {
+                name.value = '李四'
+            }, 1000)
+
+            watch(name, (newVal, oldVal) => {
+                console.log(newVal, oldVal)
+            }, {immediate: true}) //立即执行
+
+            //监听复杂类型
+            const nameObj = reactive({name: 'zhangsan'})
+            setTimeout(() => {
+                nameObj.name = 'list'
+            }, 2000)
+
+            //复杂数据无法直接监听、惰性
+            watch(() => nameObj, (newVal, oldVal) => {
+                console.log(newVal, oldVal) //不会触发
+            })
+
+            //需要深度监听、不惰性
+            watch(() => nameObj, (newVal, oldVal) => {
+                console.log(newVal, oldVal) //newVal、oldVal具有响应式
+            }, { deep: true })
+
+            //也可以直接监听对象的属性
+            watch(() => nameObj.name, (newVal, oldVal) => {
+                console.log(newVal, oldVal)
+            })
+
+            // 同时监听多个对象
+            watch([() => nameObj.name, () => nameObj.lastName], ([newName, newLastName], [oldName, oldLastName]) => {
+                console.log(newName, oldName, newLastName, oldLastName)
+            })
+
+            const stop = watchEffect(() => {
+                console.log(name);
+                console.log(nameObj.name);
+            })
+
+            // 5秒后停止监听
+            setTimeout(()=>{
+                stop()
+            },5000)
+
+            return {
+                name,
+                nameObj
+            }
+        }
+    }
+</script>
+```
+
+
