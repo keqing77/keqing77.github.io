@@ -15,3 +15,37 @@ useMemo的作用主要是 数据缓存，当缓存的状态数据，发生改变
  - useMemo和useCallback的区别就是 useCallback直接执行函数，而useMemo返回这个函数
  - 函数中返回函数: 高阶组件
 :::
+
+```jsx
+//useMemo 和useCallback
+import React,{useState,memo,useCallback,useMemo} from 'react'
+
+const Child = memo((props) => {
+  console.log('我被memo缓存了');
+  return  <button onClick={() => props.doSth()}>累加</button>
+})
+
+export default function App() {
+  const [num,setNum] = useState(1);
+
+  //useCallback
+  // const doSth = useCallback(() => {
+  //   setNum(num => num +1)
+  // },[])
+
+  //useMemo
+  //和useCallback的区别就是 一个是直接调用函数，一个是返回调用的函数
+  //也叫高阶函数:  函数中返回返回函数
+  const doSth = useMemo(() => {
+    return ()=> setNum(num => num +1)
+  },[])
+
+  return (
+    <div>
+      <h3>数字为: {num}</h3>
+      <Child doSth={doSth} />
+      {/* 这里子组件无影响，但是每次更新父组件自身的数据都会重新渲染子组件，非常耗性能,可以使用memo缓存 */}
+    </div>
+  )
+}
+```

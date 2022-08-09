@@ -43,17 +43,17 @@ import TabItem from '@theme/TabItem';
 > 如果你打很多个空格，html都会解析成1个空格，如果你就需要多个空格，这时候你就需要HTML实体了。
 
 :::warning 特殊实体
-- &nbsp;	空格
-- &lt;	<
-- &gt;	>
-- &quot;	"
-- &copy;	版权符号C
-- &reg;	注册商标R
-- &amp;	 &
-- &trade;	TM商标
-- &yen;	RMB符号
-- &times;	乘号
-- &divide;	除号
+- `&nbsp`	空格
+- `&lt`  	<
+- `&gt`	    >
+- `&quot`	"
+- `&copy`	版权符号C
+- `&reg`	注册商标R
+- `&amp`	 &
+- `&trade`	TM商标
+- `&yen`	RMB符号
+- `&times`	乘号
+- `&divide`	除号
 :::
 
 

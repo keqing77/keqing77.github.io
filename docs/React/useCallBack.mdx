@@ -3,3 +3,18 @@ sidebar_position: 11
 ---
 
 # useCallBack
+
+> `useCallback(fn, deps)等同于useMemo(() => fn, deps)`
+
+```jsx
+const memoizedCallback = useCallback(
+  () => {
+    doSomething(a, b);
+  },
+  [a, b],
+);
+```
+
+- 返回一个`memoized`的回调。
+- 传递一个内联回调和一个依赖关系数组。
+- useCallback将返回一个回调的备忘版本，`只有当其中一个依赖关系发生变化时才会改变`。这在传递回调给优化的子组件时很有用，这些子组件依赖引用平等来防止不必要的渲染（例如shouldComponentUpdate)

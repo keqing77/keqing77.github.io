@@ -5,3 +5,97 @@ sidebar_position: 7
 # useReducer
 
 > Redux的代替品, 但依然难用😁
+
+## usage
+`const [state, dispatch] = useReducer(reducer, initialArg, init)`
+
+> useReducer返回一个正好有两个项目的数组。
+
+- 这个状态变量的当前状态，最初设置为你提供的`初始状态(state)`。
+- 让你改变它以响应交互的`调度函数(dispatch)`
+- 要更新屏幕上的内容，可以用一个代表用户行为的对象(dispatch)来调用调度，称为`行动(action)`
+- React会将当前状态和动作传递给你的reducer函数。你的reducer函数将计算并返回下一个状态。
+- React将存储下一个状态，用它渲染你的组件，并更新UI
+
+:::info 使用方法
+- Adding a reducer to a component (给组件添加一个reducer)
+- Writing the reducer function (编写reducer函数)
+- Avoiding recreating the initial state (避免重新创建初始状态)
+:::
+
+### 1. 给组件添加一个reducer
+```jsx
+import { useReducer } from 'react';
+
+function reducer(state, action) {
+  // ...
+}
+
+function MyComponent() {
+  const [state, dispatch] = useReducer(reducer, { age: 42 });
+  // ...
+```
+
+### 2. 编写reducer函数
+
+```jsx
+import { useReducer } from 'react';
+
+function reducer(state, action) {
+  if (action.type === 'incremented_age') {
+    return {
+      age: state.age + 1
+    };
+  }
+  throw Error('Unknown action.');
+}
+
+export default function Counter() {
+  const [state, dispatch] = useReducer(reducer, { age: 42 });
+
+  return (
+    <>
+      <button onClick={() => {
+        dispatch({ type: 'incremented_age' })
+      }}>
+        Increment age
+      </button>
+      <p>Hello! You are {state.age}.</p>
+    </>
+  );
+}
+```
+
+
+
+### 3. 避免重新创建初始状态
+
+React保存了一次初始状态，并在接下来的渲染中忽略了它
+
+```jsx
+function createInitialState(username) {
+  // ...
+}
+
+function TodoList({ username }) {
+  const [state, dispatch] = useReducer(reducer, createInitialState(username));
+  // ...
+```
+
+
+**尽管createInitialState(username)的结果只用于初始渲染，但你仍然在每次渲染时调用这个函数。如果它要创建大型数组或进行昂贵的计算，这可能是一种浪费。
+为了解决这个问题，你可以把它作为初始化函数传递给useReducer，作为第三个参数来代替**
+
+
+```jsx
+function createInitialState(username) {
+  // ...
+}
+
+function TodoList({ username }) {
+  const [state, dispatch] = useReducer(reducer, username, createInitialState);
+  // ...
+```
+
+**注意，你传递的是createInitialState，即函数本身，而不是createInitialState()，即调用它的结果。这样一来，初始化后的初始状态就不会被重新创建了。
+在上面的例子中，createInitialState需要一个用户名参数。如果你的初始化器不需要任何信息来计算初始状态，你可以传递null作为useReducer的第二个参数。**

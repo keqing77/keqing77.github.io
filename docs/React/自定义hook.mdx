@@ -6,5 +6,27 @@ sidebar_position: 12
 
 :::tip 如果一段代码想要复用,那么就要考虑 自定义 hooks
 > useXXX 来起名
-
+- 通过自定义 Hook，可以将组件逻辑提取到可重用的函数中。
+- 通过闭包的方式给return出来
 :::
+
+
+## 使用自定义hook useDebounce 来实现防抖
+> 防抖是指 比如一个提交按钮,你按了好多次, 但执行最后一次,能够有效节省性能
+
+```tsx {2,4-6}
+export default function useDebounce<T>(value: T, wait: number, immediate: boolean): T {
+    const [state, setState] = useState<T>(value)
+
+    const { run } = useDebounceFn(() => {
+        setState(value)
+    }, wait, immediate)
+
+    useEffect(() => {
+        run()
+    }, [value])
+    return state;
+}
+```
+
+更多参考[ahook](https://ahooks.js.org/) 和 [react-use](https://streamich.github.io/react-use/?path=/story/components-usekey--demo)
