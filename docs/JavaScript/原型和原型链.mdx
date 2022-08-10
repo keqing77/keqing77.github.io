@@ -3,11 +3,44 @@ sidebar_position: 7
 ---
 
 # 原型和原型链
+每个对象拥有一个原型对象，对象以其原型为模板，从原型继承方法和属性，这些属性和方法定义在对象的构造函数的 prototype 属性上，而非对象实例本身。
 
-## new
+> 每个 JS 对象都有 __proto__ 属性，可以通过__proto__找到自己的原型(prototype)，原型(prototype)也是一个对象。
+- prototype是构造函数的属性，而constructor则是构造函数的prototype属性所指向的那个对象，也就是原型对象的属性
+- 对象的__proto__保存着该对象的构造函数的prototype
 
 ## 原型
+:::tip 原型[[Prototype]]
+在 JavaScript 中，对象有一个特殊的隐藏属性 [[Prototype]]（如规范中所命名的），它要么为 null，要么就是对另一个对象的引用。该对象被称为“原型”：
+:::
+
+
+当我们从 `object` 中读取一个缺失的属性时，`JavaScript` 会自动从原型中获取该属性。在编程中，这被称为“原型继承”。很快，我们将通过很多示例来学习此类继承，以及基于此类继承的更炫酷的语言功能。
+
+属性 [[Prototype]] 是内部的而且是隐藏的，但是这儿有很多设置它的方式。
+
+其中之一就是使用特殊的名字 __proto__，就像这样：
+```js
+let animal = {
+  eats: true
+};
+let rabbit = {
+  jumps: true
+};
+
+rabbit.__proto__ = animal; // 设置 rabbit.[[Prototype]] = animal
+```
+如果我们从 rabbit 中读取一个它没有的属性，JavaScript 会自动从 animal 中获取。
+
 
 ## 原型链
 
-## 构造函数
+::: tip
+当一个对象调用某个方法或者属性的时候，先在自身查找，如果找到就调用，如果没有就顺着__proto__到原型对象中查找，如果还没有就继续去原型的原型中查找，一直到null，这样形成一条链叫做原型链。如果还没有找到就返回undefined
+:::
+
+[//]: # (## new)
+
+
+
+[//]: # (## 构造函数)

@@ -3,3 +3,91 @@ sidebar_position: 10
 ---
 
 # 事件冒泡/捕获/委托
+
+:::tip 事件执行顺序
+捕获->事件->冒泡
+:::
+
+## 事件冒泡:
+> 事件冒泡可以形象地比喻为把一颗石头投入水中，泡泡会一直从水底冒出水面。也就是说，事件会从最内层的元素开始发生，一直向上传播，直到document对象。
+
+:::info 不支持冒泡的事件:
+scroll,blur, mouseenter, mouseleave, load, unload,resize
+:::
+
+```html
+<div id="s1">s1
+    <div id="s2">s2</div>
+</div>
+<script>
+    s1.addEventListener("click",function(e){
+        console.log("s1 冒泡事件");
+    },false);
+    s2.addEventListener("click",function(e){
+        console.log("s2 冒泡事件");
+    },false);
+</script>
+```
+
+## 事件捕获:
+> 与事件冒泡相反，事件会从最外层开始发生，直到最具体的元素。
+
+```html
+<div id="s1">s1
+    <div id="s2">s2</div>
+</div>
+<script>
+    s1.addEventListener("click",function(e){
+        console.log("s1 捕获事件");
+    },true);
+    s2.addEventListener("click",function(e){
+        console.log("s2 捕获事件");
+    },true);
+</script>
+```
+
+## 事件委托
+:::warning 事件委托原理
+- 将子级的事件 委托 给父级去处理 利用的是冒泡的机制
+- 事件执行顺序: 捕获 -> 触发事件 -> 冒泡
+- 给父级绑定事件，点击子级，冒泡后触发父级事件
+:::
+
+> 有一个列表，点击列表项删除，使用事件代理实现
+如果不用事件代理，就要为每个列表项绑定事件，而且后续添加元素是不能触发事件，事件代理就可以解决
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>事件委托</title>
+</head>
+<body>
+    <ul>
+        <li>apple</li>
+        <li>banana</li>
+        <li>grape</li>
+    </ul>
+</body>
+</html>
+
+<script>
+    // 不利用事件委托方法
+    // let li = document.querySelectorAll("li");
+    // let ul = document.querySelector("ul");
+    // for(let i = 0; i < li.length; i++){
+    //     li[i].onclick = function(){
+    //        ul.removeChild(this);
+    //     }
+    // }
+
+    let ul = document.querySelector("ul");
+    ul.onclick = (e) => {
+        console.log(event.target);
+        ul.removeChild(event.target);
+    }
+</script>
+```

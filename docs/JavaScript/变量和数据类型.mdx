@@ -1,6 +1,9 @@
 ---
 sidebar_position: 2
 ---
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 
 # 变量和数据类型
 
@@ -12,10 +15,155 @@ let name = tom;
 const measurements  = [92,60,88];
 ```
 ### var、let和const
+var 为 `ES5` 前唯一 声明变量的方式 , 而`let` 和`const` 是`ES6`推出的全新声明变量的方式, 用以代替`var`的致命缺陷
+
+:::danger `var`的致命缺陷
+1. 变量提升
+1. 可以被重复声明
+1. 没有块作用域
+1. 会导致意外的全局变量
+:::
+
+<Tabs>
+  <TabItem value="var" label="var">
+
+```js
+var a = 10;
+var a = 'js' // 合法
+```
+
+  </TabItem>
+<TabItem value="let" label="let">
+
+  ```js
+  let a = 10;
+  let a = 5// error!
+  ```
+
+</TabItem>
+<TabItem value="const" label="const">
+
+  ```js
+  const π = 3.14159,
+  π = 3 // error!
+
+  const Cat = {id:1,name:'tom'}
+  Cat.name = 'jerry',
+  ```
+</TabItem>
+</Tabs>
+
 
 ### 块级作用域
 
+>ES5 只有全局作用域和函数作用域，没有块级作用域，这导致很多场景不合理。
+
+:::danger 没有块级作用域有什么问题?
+
+1. `内层变量可能会覆盖外层变量`
+
+> 以下代码的原意是， if 代码块的外部使用`外层的 tmp 变量`，内部使用`内层的 tmp 变量`。但是，函数 fn 执行后，输出结果为` undefined` ，原因在于因为` if (false) {var tmp = 'hello world'}`尽管被`{}`包裹,但`var不存在块级作用域`,就会变量提升导致`内层的 tmp 变量覆盖了外层的 tmp 变量`。
+
+```js
+var tmp = new Date()
+function fn() {
+  console.log(tmp)
+  if (false) {
+    var tmp = 'hello world'
+  }
+}
+fn() // undefined
+```
+
+2. `用来计数的循环变量泄露为全局变量`
+
+```js
+var s = 'hello'
+for (var i = O; i < s.length; i++) {
+  console.log(s[i])
+}
+console.log(i) // 5
+```
+> 上面的代码中，变量` i `只用来控制循环，但是循环结束后，它并没有消失，而是泄露成了全局变量。 `let` 实际上为 `JavaScript` 新增了`块级作用域`。
+
+```js
+function fl() {
+  let n = 5
+  if (true) {
+    let n = 10
+  }
+  console.log(n) // 5
+}
+```
+>上面的函数有两个代码块，都声明了变量 `n`，运行后输出 `5` 。这表示外层代码块不受内层代码块的影响。如果使用 `var` 定义变量 ，最后输出的值就是 `10`
+
+:::
+
+:::info 经典面试题
+```js
+for (var i = 0; i < 5; i++) {
+  setTimeout(() => {
+    console.log(i)
+  }, 1000)
+}
+// 5 5 5 5 5
+````
+> 改成 ES6 中的 let
+
+```js
+for (let i = 0; i < 5; i++) {
+  setTimeout(() => {
+    console.log(i)
+  }, 1000)
+}
+// 0 1 2 3 4
+```
+`这是因为setTimeout是异步代码，会先执行主线程的代码，当主线程代码执行完后，这时候i的值已经是5了，setTimeout便会打印出5个5
+而使用let后，无论是()还是{} 都会产生块级作用域,由于块级作用域的特性，每次for循环执行，let声明的变量都会重新绑定一次，i 的值自然是每次执行的值`
+
+那么 ES5 能不能实现 块级作用域 的效果呢? 可以的，我们可以利用闭包
+```js
+for (var i = 0; i < 5; i++) {
+  ;(function (index) {
+    setTimeout(() => {
+      console.log(index)
+    }, 1000)
+  })(i)
+}
+// 0 1 2 3 4
+```
+
+:::
+
+
 ### 变量提升
+
+:::info 提升指的是声明会提升至当前作用域的顶端, 而赋值留在原处
+
+- 函数声明提升优先于变量提升
+- Javascript中的所有声明均存在提升, 包括`var`,`let`,`const`,`class`,`function`,但`ES6`推出的会存在`TDZ`(暂时性死区),而表现得像不会提升一样
+- 只有函数声明才有函数提升, 函数表达式是不会提升的
+
+:::
+
+```js {4-7}
+console.log(a) // undefined
+var a = 12
+
+实际上提升后的代码
+var a;  //提升到作用域顶端，默认赋值undefined
+console.log(a) // undefined
+a = 12
+```
+
+:::warning 暂时性死区-在未赋值禁止访问 (temporal dead zone，简称TDZ)
+通过 `let`,`const` 等声明的变量直到它们的定义被执行时才初始化。在变量初始化前访问该变量会导致 `ReferenceError`。该变量处在一个自块顶部到初始化处理的“暂时性死区”中
+
+```js
+console.log(a)
+let a = 12 //ReferenceError: a is not defined
+```
+:::
 
 
 ## 数据类型
@@ -36,16 +184,175 @@ const measurements  = [92,60,88];
 ### 引用数据类型(1种): 引用值
 - `object`
 
+### 堆和栈
+- `栈`
+  - 自动分配大小固定的内存空间，自动释放，遵循先进后出原则,存放基本数据类型以及指向存放在堆中引用类型的地址指针。
+- `堆`
+  - 大小不固定，存放引用类型，保持引用则垃圾回收不会回收。
+
+`基本类型采用的是值传递，而引用类型是地址传递。结合下图理解，就可以知道，如果找一个基本类型是直接去栈中找，而找一个引用类型，则会先去找它的地址指针(存放在栈中)，然后通过这个地址找到在堆内存的位置从而找到引用类型`
+![](http://vue.lavard.cn/assets/img/stackHeap.11584784.png)
+
+
 ### 深浅拷贝
 
-### 浮点数精度丢失
+- `浅拷贝`
+  - 浅拷贝只复制指向某个对象的指针，而不复制对象本身，新旧对象还是共享同一块内存。但深拷贝会另外创造一个一模一样的对象，源对象与拷贝对象互相独立，新对象跟原对象不共享内存，修改新对象不会改变旧对象。
+- `深拷贝`
+  - 深拷贝和浅拷贝都是针对引用类型数据，因为基本数据类型赋值后（开辟新内存空间存放新值），改变新数据，都不会影响到原来的数据。也就是说对于基本数据类型来说，无论深浅拷贝，数据都是共用的，只要一个拷贝的值发生改变，另外一个不会受影响。
 
+
+#### 浅拷贝：
+**直接赋值、 object.assign、 concat() 、slice()、 Array.from() ...拓展运算符 ，以上都是浅拷贝，除了直接赋值，如果只涉及基本数据类型和单层引用类型，你也可以认为他们是(伪)深拷贝。**
+
+如果记不住, 那只要记住不是深拷贝(就2种)都是浅拷贝就得了~
+
+#### 深拷贝：
+- `JSON.parse(JSON.stringify(object))`
+- `手写深拷贝`
+  - 更好的处理方式当然是手写深拷贝了，但手写深拷贝需要处理许多问题，很多人写的其实都没有考虑周到，比如原型链如何处理、DOM 如何处理等等，推荐使用`lodash` 等工具库的深拷贝函数。
+
+:::warning JSON这种方法虽然快速，但有几个缺点。如
+- 会忽略 undefined
+- 会忽略 symbol
+- 不能序列化函数
+- 不能解决循环引用的对象
+:::
+
+
+
+### 浮点数精度丢失
+JS 的数字类型是浮点类型的，没有整型。并且浮点类型基于 `IEEE 754标准实现（64位）`，基于该标准的语言都存在浮点数运算精度丢失的问题(PHP,Java，Python等)。
+
+> 因为计算机只认识二进制,也就是`0和1`, 在转换浮点数如`0.1`的时候, 二进制是无限循环小数, 而受限于精度位数原因, 只能截取53位小数, 所以会存在误差,也就是 `浮点数精度丢失`的问题 ,  你可以测试 `0.1 + 0.2 !== 0.3`
+
+![](data:image/png;base64,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)
 
 ## 判断类型
 
 ### typeof
+:::tip typeof 判断基本数据类型, 返回该类型的`字符串`
+
+- `可以判断基本数据类型`，除了Null (null是object，这是1个设计上的BUG)
+- `不能判断引用类型`，因为都统一返回`object`
+
+```js
+typeof 666 // 'number'
+typeof '0' // 'string'
+typeof undefined // 'undefined'
+typeof true // 'boolean'
+
+const sym1 = Symbol();
+typeof sym1 // 'symbol'
+
+const HugeNumber = BigInt(9007199254740991);
+typeof HugeNumber //"bigint"
+
+typeof null //'object' 基本数据类型除了null都是判断准确的。这情况是JS设计的一个缺陷
+typeof NaN //'number' NaN = not a number 所以NaN是Number类型，JS真有你的哦~
+
+typeof并不能准确判断引用类型，因为除了函数外返回的都是'object'
+typeof function(){}  //'function'
+typeof [1,2,3] //'object'
+```
+
+:::
+
 
 ### instance of
 
-### Object.prototype.toString()
+:::tip  `A instanceof B` 布尔值，true 或false
 
+- 可以判断引用类型判断引用类型,检测构造函数的 prototype 属性是否出现在该实例对象的原型链上
+
+```js
+// 定义构造函数
+function C(){}
+function D(){}
+
+var o = new C();
+
+o instanceof C; // true，因为 Object.getPrototypeOf(o) === C.prototype
+o instanceof D; // false，因为 D.prototype 不在 o 的原型链上
+o instanceof Object; // true，因为 Object.prototype.isPrototypeOf(o) 返回 true
+C.prototype instanceof Object // true，同上
+
+C.prototype = {};
+var o2 = new C();
+
+o2 instanceof C; // true
+o instanceof C; // false，C.prototype 指向了一个空对象,这个空对象不在 o 的原型链上.
+
+D.prototype = new C(); // 继承
+var o3 = new D();
+o3 instanceof D; // true
+o3 instanceof C; // true 因为 C.prototype 现在在 o3 的原型链上
+```
+
+:::
+### Object.prototype.toString().call()
+
+
+:::tip 这是判断类型最为准确的方法，能够准确判断基本数据类型(包括null)和引用类型的方法
+
+- 为什么不直接toString(XX)呢？
+`toString() 方法返回一个表示该对象的字符串，call()让this指向该对象。`
+  - 每一个继承 Object 的对象都有 toString 方法,对于大多数对象(Array、Date、RegExp等)继承自Object的，toString() 方法都是重写了的，这时就需要用 call() 或 Reflect.apply() 等方法来调用。
+
+`我们可以直接调用Object原型上未被覆盖的toString()方法，使用call来改变this指向来达到我们想要的效果`。
+
+```js
+// Boolean 类型，tag 为 "Boolean"
+Object.prototype.toString.call(true);            // => "[object Boolean]"
+
+// Number 类型，tag 为 "Number"
+Object.prototype.toString.call(1);               // => "[object Boolean]"
+
+// String 类型，tag 为 "String"
+Object.prototype.toString.call("");              // => "[object String]"
+
+// Array 类型，tag 为 "String"
+Object.prototype.toString.call([]);              // => "[object Array]"
+
+// Arguments 类型，tag 为 "Arguments"
+Object.prototype.toString.call((function() {
+  return arguments;
+})());                                           // => "[object Arguments]"
+
+// Function 类型， tag 为 "Function"
+Object.prototype.toString.call(function(){});    // => "[object Function]"
+
+// Error 类型（包含子类型），tag 为 "Error"
+Object.prototype.toString.call(new Error());     // => "[object Error]"
+
+// RegExp 类型，tag 为 "RegExp"
+Object.prototype.toString.call(/\d+/);           // => "[object RegExp]"
+
+// Date 类型，tag 为 "Date"
+Object.prototype.toString.call(new Date());      // => "[object Date]"
+
+// 其他类型，tag 为 "Object"
+Object.prototype.toString.call(new class {});    // => "[object Object]"
+```
+:::
+
+### constructor 属性
+
+:::tip constructor 属性返回所有 JavaScript 变量的构造函数。
+
+```js
+"John".constructor                 // 返回函数 String()  { [native code] }
+(3.14).constructor                 // 返回函数 Number()  { [native code] }
+false.constructor                  // 返回函数 Boolean() { [native code] }
+[1,2,3,4].constructor              // 返回函数 Array()   { [native code] }
+{name:'John', age:34}.constructor  // 返回函数 Object()  { [native code] }
+new Date().constructor             // 返回函数 Date()    { [native code] }
+function () {}.constructor         // 返回函数 Function(){ [native code] }
+```
+:::
+
+### 特定类型API
+
+- Array,isArray()
+- Object.is()
+- NaN.isNaN()

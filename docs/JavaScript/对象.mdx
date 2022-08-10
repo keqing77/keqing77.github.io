@@ -4,7 +4,119 @@ sidebar_position: 6
 
 # 对象
 
+> 我们可以通过使用带有可选 属性列表 的花括号 {…} 来创建对象。一个属性就是一个键值对（`key: value`），其中`键（key）`是一个字符串（也叫做属性名），`值（value）`可以是任何值。
+
+## 创建对象
+```js
+let user = new Object(); // “构造函数” 的语法
+let user = {};  // “字面量” 的语法
+Object.create() // APi
+```
+
+## 属性
+
+```js
+let user = {     // 一个对象
+  name: "John",  // 键 "name"，值 "John"
+  age: 30        // 键 "age"，值 30
+};
+```
+:::info 属性有键（或者也可以叫做“名字”或“标识符”），位于冒号 ":" 的前面，值在冒号的右边。
+
+- 在 user 对象中，有两个属性：
+1. 第一个的键是 "name"，值是 "John"。
+1. 第二个的键是 "age"，值是 30。
+
+:::
+
+### 读取属性
+
+1. 方括号
+2. 点操作符
+
+```js
+// 读取文件的属性：
+alert( user.name ); // John
+alert( user[age] ); // 30
+```
 
 
+### 添加属性
+直接添加属性即可
+`user.isAdmin = true;`
 
-## Object.create()
+### 删除属性
+我们可以用 delete 操作符移除属性：
+`delete user.age;`
+
+### 检查对象是否为空
+
+只需要遍历这个对象，如果对象存在任何属性则 return false。
+```js
+function isEmpty(obj) {
+  for (let key in obj) {
+    // 如果进到循环里面，说明有属性。
+    return false;
+  }
+  return true;
+}
+```
+
+## 方法
+
+> 在 JavaScript 中，行为（action）由属性中的函数来表示
+
+```js
+let user = {
+  // ...
+};
+
+// 首先，声明函数 (function 可以省略)
+function sayHi() {
+  alert("Hello!");
+}
+
+// 然后将其作为一个方法添加
+user.sayHi = sayHi;
+
+user.sayHi(); // Hello!
+```
+
+
+### this
+通常，对象方法需要访问对象中存储的信息才能完成其工作。
+例如，user.sayHi() 中的代码可能需要用到 user 的 name 属性。
+为了访问该对象，方法中可以使用 this 关键字。
+this 的值就是在点之前的这个对象，即调用该方法的对象。
+
+```js
+let user = {
+  name: "John",
+  age: 30,
+
+  sayHi() {
+    // "this" 指的是“当前的对象”
+    alert(this.name);
+  }
+
+};
+
+user.sayHi(); // John
+```
+
+### 可选链
+
+:::info 如果可选链 `?.` 前面的值为 `undefined` 或者 `null`，它会停止运算并返回 `undefined`。
+
+如果一个属性既不是 `null` 也不是 `undefined`，那么它就“存在”。
+
+换句话说，例如 `value?.prop`：
+如果 value 存在，则结果与 value.prop 相同，
+否则（当 value 为 undefined/null 时）则返回 undefined。
+下面这是一种使用 ?. 安全地访问 user.address.street 的方式：
+:::
+
+```js
+let user = {}; // user 没有 address 属性
+alert( user?.address?.street ); // undefined（不报错）
+```

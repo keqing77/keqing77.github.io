@@ -3,3 +3,234 @@ sidebar_position: 9
 ---
 
 # 继承
+
+> `继承`是`面向对象编程`三大特性之一 (封装,继承,多态)
+
+继承就是子类可以使用父类的所有功能，且可以对这些功能进行扩展, 提升开发效率。
+
+:::info JavaScript严格上并不是一门面向对象编程语言
+- `JavaScript`支持`面向对象` 和 `函数式编程` , 但不是完美支持,或者只是具有面向对象的一些特征.
+- 在传统的面向对象语言中，如(Java,C#,C++),都存在类（class）的概念，类就是对象的模板，对象就是类的实例。
+- 是在Javascript语言体系中，是不存在类（Class）的概念的，javascript中不是基于类的，`而是通过构造函数（constructor）和原型链（prototype chains）实现的`。
+- 虽然ES6中提供了更接近传统语言的写法，引入了Class（类）这个概念，作为对象的模板。通过class关键字，可以定义类。但ES6的class只是一个原型的语法糖而已，新的class写法只是让原型对象的写法更加清晰、更像面向对象编程的语法而已。
+:::
+
+## 概念
+
+:::tip 前提
+```js {1,6,9,12,15}
+// 1. 构造函数   只要是在 `new` 后面的函数就是构造函数
+function Dog(name){
+  this.name
+}
+
+// 2. 构造函数的原型对象
+Dog.prototype
+
+// 3. 构造函数的实例对象 dog
+const dog = new Dog('旺财')
+
+// 4. 构造函数的静态方法, 名为fn
+Dog.fn = function(){}
+
+// 5. 原型对象上的方法, 名为fn
+Dog.prototype.fn = function(){}
+```
+:::
+
+### 实例方法
+> 挂载在原型上
+
+
+### 静态方法
+> 挂载在函数上, 只有函数本身能调用
+
+### 构造函数
+> 只要是出现在`new`后面的函数都是构造函数, 一般以`大写字母开头`
+
+## 原型链继承
+
+```js
+// 原型链继承
+function Foo() {
+    this.a = "111";
+  }
+
+Foo.prototype.say = function () {
+  console.log("这是一个方法");
+};
+
+function Bar() {}
+
+Bar.prototype = new Foo(); //将原型对象指向别的实例  就可以继承实例原型链上的方法
+
+var bar1 = new Bar();
+
+console.log(bar1.a);
+// Bar并没有属性a，但是Bar.prototype.a = 111，所以bar1.a = 111
+bar1.say();
+// bar是Bar new出来的实例，但是Bar上没有方法，而Bar.prototype上有方法，所以bar.say()调用的是Bar.prototype.say()
+```
+
+:::danger 原型链的缺点在于:会有引用值共享的问题，修改1个实例的引用值会影响另一个实例
+```js
+function Foo() {
+// this.a = '111'; 原始值没问题
+this.a = [1, 2, 3, 4];
+}
+
+Foo.prototype.say = function () {
+console.log("这是一个方法");
+};
+
+function Bar() {}
+
+Bar.prototype = new Foo();
+
+var bar1 = new Bar();
+var bar2 = new Bar();
+
+bar1.a.push(5);
+console.log(bar1.a); //[ 1, 2, 3, 4, 5 ]
+console.log(bar2.a); //[ 1, 2, 3, 4, 5 ]
+//bar1修改引用值 影响了bar2
+```
+
+:::
+
+
+## 构造函数继承
+```js
+function Foo() {
+  // this.a = '111'; 原始值没问题
+  this.a = [1, 2, 3, 4];
+}
+
+Foo.prototype.say = function () {
+  console.log("这是一个方法");
+};
+
+//在子类构造函数内部使用call或apply来调用父类构造函数
+function Bar() {      //构造函数继承
+  Foo.call(this);
+}
+
+// Bar.prototype = new Foo();   这是上面的原型继承
+
+var bar1 = new Bar();
+var bar2 = new Bar();
+
+bar1.a.push(5);  //修改引用类型也互不影响
+console.log(bar1.a); //[ 1, 2, 3, 4, 5 ]
+console.log(bar2.a); //[ 1, 2, 3, 4 ]
+```
+
+:::danger 构造函数继承问题: 没办法拿到原型上的方法
+
+:::
+
+## 组合继承
+
+```js
+  function Foo() {
+    this.a = [1, 2, 3, 4];
+  }
+
+  Foo.prototype.say = function () {
+    console.log("这是一个方法");
+  };
+
+  function Bar() {
+    Foo.call(this);
+  } //构造函数继承
+
+  Bar.prototype = new Foo(); //原型继承
+
+  //两者组合就是组合继承  但是Foo()被执行了两次
+
+  var bar1 = new Bar();
+  var bar2 = new Bar();
+
+  bar1.a.push(5);
+  console.log(bar1.a); //[ 1, 2, 3, 4, 5 ]
+  console.log(bar2.a); //[ 1, 2, 3, 4 ]
+
+```
+
+:::danger 组合继承继承问题:  构造函数被执行了两次, 性能浪费
+
+:::
+
+## 寄生组合函数继承
+
+```js
+function Foo() {
+  this.a = [1, 2, 3, 4];
+}
+
+Foo.prototype.say = function () {
+  console.log("这是一个方法");
+};
+
+function Bar() {
+  Foo.call(this);
+} //构造函数继承
+
+//Bar.prototype = new Foo(); //原型继承，结合起来是组合继承，Foo()被执行了两次
+
+Bar.prototype = Object.create(Foo.prototype);
+//通过Object.create()方法直接指定原型对象，不需要new构造函数再次调用Foo()
+
+var bar1 = new Bar();
+var bar2 = new Bar();
+
+bar1.a.push(5);
+console.log(bar1.a); //[ 1, 2, 3, 4, 5 ]
+console.log(bar2.a); //[ 1, 2, 3, 4 ]
+
+```
+
+:::info 寄生组合继承完美结合构造函数继承和原型链继承的优点
+通过Object.create()方法直接指定原型对象，不需要new构造函数再次调用Foo()
+:::
+## class继承
+
+```js
+class Parent {
+  constructor(value) {
+    this.val = value
+  }
+  getValue() {
+    console.log(this.val)
+  }
+}
+class Child extends Parent {
+  constructor(value) {
+    super(value)
+    this.val = value
+  }
+}
+let child = new Child(1)
+child.getValue() // 1
+child instanceof Parent // true
+```
+
+:::info class是原型的语法糖
+我们使用 class 关键字来创建一个类，类体在一对大括号 {} 中，我们可以在大括号 {} 中定义类成员的位置，如方法或构造函数。
+每个类中包含了一个特殊的方法 constructor()，它是类的构造函数，这种方法用于创建和初始化一个由 class 创建的对象。
+:::
+
+
+[//]: # (## 圣杯继承)
+
+[//]: # ()
+[//]: # (```js)
+
+[//]: # ()
+[//]: # (```)
+
+[//]: # ()
+[//]: # (:::info)
+
+[//]: # ()
+[//]: # (:::)

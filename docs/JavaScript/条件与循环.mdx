@@ -4,18 +4,158 @@ sidebar_position: 4
 
 # 条件与循环
 
+> 条件判断一定是 `布尔值`
+
 ## if-else
+
+### if
+```js
+if (condition)
+{
+    当条件为 true 时执行的代码
+}
+```
+> 如果只有一行代码, 可以不写 `{}`
+
+```js
+const time = 21;
+if (time<20)
+    x="Good day";
+// Good day
+```
+
+### if-else
+```js
+if (condition)
+    当条件为 true 时执行的代码
+else
+    当条件不为 true 时执行的代码
+
+const time = 10;
+if (time<20)
+    x="Good day";
+else
+    x="Good evening";
+
+// Good day
+```
 
 ## switch
 
-### for
+```js
+switch(n)
+{
+    case 1:
+        执行代码块 1
+        break;
+    case 2:
+        执行代码块 2
+        break;
+    default:
+        与 case 1 和 case 2 不同时执行的代码
+}
+```
 
-### while
+## for
 
-### for...in
+> for循环接受3个参数 , 可以接受多条语句,
+- 参数一: 代码块开始前执行的语句
+- 参数二: 循环跳出的条件
+- 参数三: 每次循环结束后执行的语句
 
-### for..of
+```js
+for (var i=0; i<5; i++)
+{
+      x=x + "该数字为 " + i + "<br>";
+}
+```
 
-### forEach
+## while
 
-### map
+```js
+while (条件)
+{
+    需要执行的代码
+}
+
+while (i<5)
+{
+    x=x + "The number is " + i + "<br>";
+    i++;
+}
+```
+
+## for...in
+> for...in语句以任意顺序迭代一个对象的除Symbol以外的可枚举属性，包括继承的可枚举属性。
+
+```js {1-2}
+for (variable in object)
+  statement
+
+var obj = {a:1, b:2, c:3};
+
+for (var prop in obj) {
+  console.log("obj." + prop + " = " + obj[prop]);
+}
+
+// Output:
+// "obj.a = 1"
+// "obj.b = 2"
+// "obj.c = 3"
+```
+## for..of
+
+> for...of语句在可迭代对象（包括 Array，Map，Set，String，TypedArray，arguments 对象等等）上创建一个迭代循环，调用自定义迭代钩子，并为每个不同属性的值执行语句
+:::tip 推荐使用`for..of` 而不是 `for...in`
+for..of 性能更优
+:::
+
+```js {1-3}
+for (variable of iterable) {
+    //statements
+}
+
+let iterable = new Map([["a", 1], ["b", 2], ["c", 3]]);
+
+for (let entry of iterable) {
+  console.log(entry);
+}
+// ["a", 1]
+// ["b", 2]
+// ["c", 3]
+
+for (let [key, value] of iterable) {
+  console.log(value);
+}
+// 1
+// 2
+// 3
+```
+## forEach
+> forEach() 方法对数组的每个元素执行一次给定的函数
+
+```js
+const array1 = ['a', 'b', 'c'];
+
+array1.forEach(element => console.log(element));
+
+// expected output: "a"
+// expected output: "b"
+// expected output: "c"
+```
+## map
+
+> map() 方法创建一个新数组，这个新数组由原数组中的每个元素都调用一次提供的函数后的返回值组成。
+
+:::tip 推荐使用`Map`而不是`forEach`
+:::
+
+```js
+const array1 = [1, 4, 9, 16];
+
+// pass a function to map
+const map1 = array1.map(x => x * 2);
+
+console.log(map1);
+// expected output: Array [2, 8, 18, 32]
+```

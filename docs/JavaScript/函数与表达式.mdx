@@ -5,9 +5,423 @@ sidebar_position: 5
 # 函数与表达式
 
 ## 函数声明
+function 关键字首先出现，然后是 `函数名`，然后是括号之间的` 参数 `列表（，最后是花括号之间的代码 `函数体`
+
+- 函数的可以`接受参数`
+- 函数`可以返回值`,默认为空
+- 函数内定义的变量为`局部变量`, 只有函数内部可以访问
+- 函数可以访问`外部变量`
+- 一个函数应该只做一件事
+
+```js
+function showMessage() {
+  alert( 'Hello everyone!' );
+}
+```
+
 
 ## 函数表达式
 
-## 立即表达函数(IIFE)
 
+```js
+const sayHi = function() {
+  alert( "Hello" );
+};
+```
+
+
+## 箭头函数
+
+:::info ES6新增了箭头函数表达式`=>`来代替传统的函数表达式`function`
+
+>引入箭头函数有两个方面的作用：更简短的函数并且不绑定this。
+
+- 箭头函数没有自己的this,会找外层的非箭头函数的this作为自己的this, 并且`不可改变`
+- `没有构造函数 constructor()` ,不能new 没有arguments 没有super()
+- 不可以使用 yield 命令，因此箭头函数不能用作 Generator 函数
+- 箭头函数一样可以使用解构、...拓展表达式等等
+:::
+
+### 简洁代码
+`箭头函数写法简洁了许多, 但过度简洁反而降低可读性, 因此即便是只有1个参数也建议函数参数用()进行包裹`
+
+```js {1}
+//只有1个参数时可以省略括号
+const func = v => v
+//等价于
+const func = function(v){
+	return v
+};
+
+//多个参数时
+const func = (value, num) => value * num;
+
+//需要返回一个对象
+const func = (value, num) => ({total: value * num});
+```
+
+#### 箭头函数的this
+
+> 箭头函数的 this 是包着箭头函数的普通函数(function)的this来作为自己的this
+
+```js
+const obj = {
+    name: 'Jack',
+    getThis() {
+        console.log(this);
+    },
+};
+obj.getThis(); // {name: 'Jack', getThis: ƒ}
+```
+
+:::warning 箭头函数的this一旦被绑定就无法改变
+
+call、apply、bind无法改变箭头函数的 this
+
+如以下代码，普通函数getName打印this.name，通过call将函数中的this绑定到obj身上，调用getName打印出obj身上的属性name。
+:::
+
+```js {10}
+const obj = {
+    name: 'Jack',
+};
+
+function getName() {
+    console.log(this.name);
+}
+getName.call(obj); // Jack
+
+//若将函数改成箭头函数，那么call将不起作用，无法将函数内部的this绑定到obj，打印出undefined。
+
+const obj = {
+    name: 'Jack',
+};
+
+const getName = () => {
+    console.log(this.name);
+};
+getName.call(obj); // undefined
+```
+
+#### 不可以作为构造函数
+箭头函数不可以作为构造函数使用，若将箭头函数作为构造函数，将报错 所以箭头函数也没有自己的原型
+```js
+const Person = () => {
+    this.name = 'Jack';
+};
+const usr = new Person(); // Person is not a constructor
+
+```
+
+#### 不可以使用 arguments
+在普通函数内部，可以使用arguments来获取传入的参数，是一个类数组对象
+```js
+function func() {
+    console.log(arguments);
+}
+func(1, 2, 3); // [Arguments] { '0': 1, '1': 2, '2': 3 }
+而箭头函数就不可以使用arguments对象，获取不到输入的参数。
+
+在浏览器中，若在箭头函数使用arguments对象，将报错。
+
+const func = () => {
+    // 浏览器环境
+    console.log(arguments); // arguments is not defined
+};
+func(1, 2, 3);
+但是箭头函数可以在参数内，以...args的方式，获取到输入的参数，得到的args是一个数组。
+
+const func = (...args) => {
+    console.log(args); // [ 1, 2, 3 ]
+};
+func(1, 2, 3);
+```
+
+#### 不可以使用new
+
+因为箭头函数没有构造函数，也没有自己的原型，自然不可以new
+```js
+
+const Person=() =>{
+    this.name = 'Jack';
+    console.log(new.target);
+}
+// 浏览器环境
+new Person(); // new.target expression is not allowed here
+
+```
+
+## 闭包
+>  闭包 是指`一个函数可以记住其外部变量并可以访问这些变量`。但如上所述，在 `JavaScript` 中，所有函数都是天生闭包的（只有一个例外,new function）。
+
+- 也就是说：JavaScript 中的函数会自动通过隐藏的 [[Environment]] 属性记住创建它们的位置，所以它们都可以访问外部变量。
+- 在面试时，前端开发者通常会被问到“什么是闭包？”，正确的回答应该是闭包的定义，并解释清楚为什么 JavaScript 中的所有函数都是闭包的，以及可能的关于 [[Environment]] 属性和词法环境原理的技术细节。
+- 闭包会保持对外部变量的引用, 会造成`内存泄露`问题, 可以手动`置null` 来清除闭包释放内存
+
+```js
+function f() {
+  let value = 123;
+
+  return function() {
+    alert(value);
+  }
+}
+
+let g = f(); // 当 g 函数存在时，该值会被保留在内存中
+
+g = null; // ……现在内存被清理了
+```
+
+
+:::tip 通常，闭包是指使用一个特殊的属性 [[Environment]] 来记录函数自身的创建时的环境的函数。
+- 它具体指向了函数创建时的词法环境。
+- 但是如果我们使用 new Function 创建一个函数，那么该函数的 [[Environment]] 并不指向当前的词法环境，而是指向全局环境。
+- 因此，此类函数无法访问外部（outer）变量，只能访问全局变量
+:::
+
+```js
+function getFunc() {
+  let value = "test";
+
+  let func = new Function('alert(value)');
+
+  return func;
+}
+
+getFunc()(); // error: value is not defined
+```
+
+## 立即表达函数(IIFE)
+在之前，`JavaScript` 中只有 `var` 这一种声明变量的方式，并且这种方式声明的变量没有块级作用域，程序员们就发明了一种`模仿块级作用域`的方法。这种方法被称为“`立即调用函数表达式`”
+
+> 这里，创建了一个函数表达式并立即调用。因此，代码立即执行并拥有了自己的私有变量。
+
+```js
+(function() {
+
+  var message = "Hello";
+
+  alert(message); // Hello
+
+})();
+```
 ## 构造函数
+
+> 常规的 {...} 语法允许创建一个对象。但是我们经常需要创建很多类似的对象，例如多个用户或菜单项等。这可以使用构造函数和 "new" 操作符来实现。
+
+### 命名规则
+
+:::info 构造函数就是普通函数。不过有两个约定：
+- 它们的命名以大写字母开头。
+- 它们只能由 "new" 操作符来执行。
+:::
+
+
+
+```js
+function User(name) {
+  this.name = name;
+  this.isAdmin = false;
+}
+
+let user = new User("Jack");
+
+alert(user.name); // Jack
+alert(user.isAdmin); // false
+```
+
+### new
+:::info new背后做了4件事情
+- 一个新的空对象被创建并分配给 this。
+- 函数体执行。通常它会修改 this，为其添加新的属性。
+- 返回 this 的值。
+:::
+
+```js
+换句话说，new User(...) 做的就是类似的事情：
+
+function User(name) {
+  // this = {};（隐式创建）
+
+  // 添加属性到 this
+  this.name = name;
+  this.isAdmin = false;
+
+  // return this;（隐式返回）
+```
+
+
+## this绑定规则
+
+:::tip this的绑定规则: 其实一句话就可以概括: 谁调用this，this指向谁。
+> this的四种绑定规则( 1、默认绑定 2、隐式绑定 3、显式绑定 4、new绑定)
+当然还有箭头函数和严格模式 这两种情况
+
+- `fn()`直接调用，不管 fn 函数被放在了什么地方，this 一定是 window
+- `obj.fn()` ，我们只需要记住，谁调用了函数，this 就指向谁
+- `call`,`apply`,`bind()` 显示修改this的指向
+- `new对象`，this 被永远绑定在了new创建的对象 上面，不会被任何方式改变 this
+
+1.箭头函数没有自己的this，会找第一个包含自己的非箭头函数的this当做自己的this
+2.严格模式下，在函数内部的this禁止指向全局对象，值为undefined。
+
+`this4种绑定的优先级 new绑定 > 显式绑定 > 隐式绑定 > 默认绑定`
+
+普通函数这里的this的指向是不明确的，直到调用的时候才知道，而箭头函数的this的指向是在定义的时候就已经确定了。(因为没有自己的this)
+总结: new 绑定this的方式优先级最高，接下来是 bind 这些函数，然后是 obj.fn() 这种调用方式，最后是 fn() 这种调用方式
+:::
+
+
+### 默认绑定
+
+:::info 直接调用 fn()
+此时的 `this` 指向的是 window, 所以会读取到全局作用域下的变量a ,值为2
+:::
+
+```js
+function fn(){
+    console.log(this.a); // 2
+}
+var a=2;
+fn();
+```
+
+
+### 隐式绑定
+
+```js {1}
+// 谁调用this，this指向谁。obj.fn() 是obj在调用fn()，this指向obj
+function fn(){
+    console.log(this.a);
+}
+var obj={
+    a: 2,
+    fn: fn
+}
+
+obj.fn();// 2
+```
+
+:::warning 隐式绑定存在绑定丢失的情况 如下面的bar() , 这时候this指向了全局作用域，隐式绑定丢失，变成了默认绑定
+此时的 `this` 指向的是 window, 所以会读取到全局作用域下的变量a ,值为2
+:::
+
+```js
+let a = 2
+function foo(params) {
+    console.log(this.a);
+}
+obj = {
+    a:10,
+    foo:foo
+}
+let bar = obj.foo
+obj.foo()//10
+bar()//2
+
+同理，也是隐式绑定丢失变成默认绑定了
+var people = {
+    Name: "来自拉夫德鲁的码农",
+    getName : function(){
+        console.log(this.Name);
+    }
+};
+var bar = people.getName;
+
+bar();    // undefined
+```
+隐式绑定丢失：被隐式绑定的函数会丢失绑定对象，也就是说它会应用默认绑定，从而把this绑定到全局对象或者undefined上，取决于是否是严格模式。
+1. 将函数赋值给其他变量
+1. 函数作为另外一个函数的参数传递进去（严格意义上也属于（1））
+
+那` obj1.obj.fn() `呢？ 管你调用链有多长，`fn是obj在调用`，所以还是obj。对象属性引用链中只有上一层或者说最后一层在调用位置中起作用
+```js
+obj1.obj.fn()
+```
+
+### 显式绑定
+
+:::note call apply bind 三者都是为了改变this的指向
+- 不同点在于call接收`一个参数列表`,apply接受一个`参数数组`，bind则是`返回一个函数对象`
+- 还有区别就是 bind()是强绑定，之后无论怎么调用这个函数，this的指向都不会被改变。而call和apply是在函数在被调用的时候临时改变this的指向，不影响之后的行为。
+- this 取决于第一个参数，如果`第一个参数为空`，那么就是 `window`
+:::
+
+
+```js
+const steven = {
+    name:'Steven',
+    phoneBattery:70,
+    charge:function(level) {
+        this.phoneBattery = level
+    }
+}
+
+const becky = {
+    name:'Becky',
+    phoneBattery:30,
+}
+
+console.log(steven);
+steven.charge(100);
+console.log(steven);
+
+steven.charge.call(becky, 95);
+console.log(becky);
+```
+
+如果对一个函数进行多次 bind，那么上下文会是什么呢？
+
+```js
+let a = {}
+let fn = function () { console.log(this) }
+fn.bind().bind(a)() // => ?
+```
+`不管我们给函数 bind 几次，fn 中的 this 永远由第一次 bind 决定，所以结果永远是 window`
+
+
+### new绑定
+new绑定将this绑定到创建的对象上，并且不会被任何方式改变this！！！ (new绑定优先级最高，即通过call apply也改变不了)
+
+### 箭头函数
+
+:::note 箭头函数没有自己的this
+
+箭头函数会去找上层常规函数(Function)的this作为自己的this，如果找不到就将this指向全局对象。（简单来说就是this指向包含箭头函数的常规函数，如果没有常规函数的话就是全局对象）
+:::
+
+```js
+const shape = {
+  radius: 10,
+  diameter() {
+    return this.radius * 2
+  },
+  perimeter: () => 2 * Math.PI * this.radius
+}
+
+shape.diameter()
+shape.perimeter()
+// 20  NaN
+```
+
+> 此时的this是谁?
+
+```js
+function arrowFunction() {
+  return () => {
+    return () => {
+      console.log(this)
+    }
+  }
+}
+console.log(arrowFunction()()())
+```
+
+:::tip 答案
+箭头函数中的 this 只取决包裹箭头函数的第一个普通函数的 this。在这个例子中，因为包裹箭头函数的第一个普通函数是 arrowFunction()，所以此时的 this 是 window。另外对箭头函数使用 bind 这类函数是无效的。
+:::
+
+
+### 严格模式
+
+严格模式下，在函数内部的this禁止指向全局对象，值为undefined。
