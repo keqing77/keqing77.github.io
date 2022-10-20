@@ -1,5 +1,5 @@
-<h1 align="center">Lavard 的个人网站</h1>
-<p align="center"><b>用文字简单点记录生活, 给岁月留下不可磨灭痕迹</b></p>
+<h1 align="center">Lavard's personal site</h1>
+<p align="center"><b>Use words to simply record life, leaving indelible traces to the years</b></p>
 
 <p align="center">
 
@@ -23,31 +23,31 @@
 <strong>
 <samp>
 
-[English](README_en.md) · 简体中文
+English · [简体中文](README.md)
 
 </samp>
 </strong>
 </div>
 
-## 快速开始
+## Quick Start
 
-### 安装
+### Install
 
 ```bash
-# 克隆项目
+# clone
 git clone `repoUrl`
 
-# 安装依赖
+# install
 pnpm install
 
-# 启动服务
+# run
 npm run start
 
-# 打包构建
+# build
 npm run build
 ```
 
-### 项目结构:
+### Structure:
 
 ```
 ├─ config
@@ -64,7 +64,7 @@ npm run build
 │       └───Footer
 ```
 
-## 贡献者
+## Contributor
 
 <table>
     <tbody>
@@ -76,14 +76,14 @@ npm run build
     </tbody>
 </table>
 
-## 维护者
+## Mainter
 
 - [lavard](https://github.com/lalalavard)
 
-## 鸣谢
+## Thanks
 
 - [people](www.google.com)
 
-## 协议
+## License
 
 - [MIT](https://opensource.org/licenses/MIT)
